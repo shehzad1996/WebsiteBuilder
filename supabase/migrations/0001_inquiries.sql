@@ -12,7 +12,6 @@ create table if not exists inquiries (
   project_type text not null default 'Not sure',
   budget text not null default 'Not sure',
   timeline text not null default 'Not sure',
-  ai_features text[] not null default '{}',
   description text not null
 );
 

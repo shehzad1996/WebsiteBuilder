@@ -5,11 +5,11 @@ import { BRAND } from "@/lib/brand";
 const steps = [
   {
     title: "Submit your inquiry",
-    body: "Tell us what you want built. A few minutes, no payment, no commitment.",
+    body: "Tell us what you want built, in your own words. A few minutes, no payment, no commitment.",
   },
   {
     title: "We build it, for free",
-    body: "Our human developers, backed by AI tooling, build a real working version of your site before you pay anything.",
+    body: "Our human developers build a real, working version of your site before you pay anything.",
   },
   {
     title: "See it and get your quote",
@@ -20,34 +20,9 @@ const steps = [
     body: "Only pay once you're happy with what you see. There is nothing to lose by asking.",
   },
   {
-    title: "Edit live, anytime",
-    body: "Use our built-in AI editor to make real-time changes yourself, or ask our human support team for a hand.",
+    title: "Need changes later?",
+    body: "Just tell your developer what to change. No builder tools to learn — a person handles the update directly.",
   },
-];
-
-const aiExtras = [
-  "AI chat agents on your website",
-  "Your own AI-powered product or service",
-  "Local / self-hosted models if you'd rather not use the cloud",
-  "Free consultation on what actually fits your business",
-];
-
-const siteTypes = [
-  { label: "Takeaway shop", on: true },
-  { label: "Portfolio", on: true },
-  { label: "Online store", on: false },
-  { label: "SaaS product", on: false },
-];
-const budgets = [
-  { label: "$50", on: true },
-  { label: "$500", on: true },
-  { label: "$1,500", on: false },
-  { label: "$5,000", on: false },
-];
-const aiTags = [
-  { label: "Chatbot", on: true },
-  { label: "AI agent", on: false },
-  { label: "Local models", on: false },
 ];
 
 export default function HomePage() {
@@ -68,62 +43,27 @@ export default function HomePage() {
           {/* floating mockup */}
           <div className="mx-auto max-w-md rounded-2xl border border-white/10 bg-night-soft/80 p-6 shadow-2xl backdrop-blur">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-semibold text-white">Tune your project</h3>
+              <h3 className="text-sm font-semibold text-white">Describe your project</h3>
               <span className="rounded-full bg-brand/15 px-2.5 py-1 text-[11px] font-medium text-brand-light">
                 Free quote
               </span>
             </div>
             <p className="mt-1 text-xs text-white/40">
-              Pick what you need. We&apos;ll quote it in minutes.
+              One prompt is enough. A developer takes it from there.
             </p>
 
-            <div className="mt-4 flex h-9 items-center rounded-lg border border-white/10 bg-night px-3 text-xs text-white/30">
-              Search project type, budget, features&hellip;
+            <div className="mt-4 rounded-lg border border-white/10 bg-night p-3">
+              <p className="text-xs leading-relaxed text-white/60">
+                &ldquo;A clean website for my coffee shop &mdash; menu page,
+                opening hours, and a way for people to find us.&rdquo;
+              </p>
             </div>
 
-            <div className="mt-5">
-              <div className="flex items-center justify-between text-[10px] font-medium uppercase tracking-wide text-white/30">
-                <span>Site type</span>
-                <span>10+</span>
-              </div>
-              <div className="mt-2 flex flex-wrap gap-2">
-                {siteTypes.map((t) => (
-                  <span key={t.label} className={`tag-pill ${t.on ? "tag-pill-on" : "tag-pill-off"}`}>
-                    {t.label}
-                    {t.on && <span aria-hidden>&#10003;</span>}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            <div className="mt-4">
-              <div className="flex items-center justify-between text-[10px] font-medium uppercase tracking-wide text-white/30">
-                <span>Budget</span>
-                <span>5 tiers</span>
-              </div>
-              <div className="mt-2 flex flex-wrap gap-2">
-                {budgets.map((t) => (
-                  <span key={t.label} className={`tag-pill ${t.on ? "tag-pill-on" : "tag-pill-off"}`}>
-                    {t.label}
-                    {t.on && <span aria-hidden>&#10003;</span>}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            <div className="mt-4">
-              <div className="flex items-center justify-between text-[10px] font-medium uppercase tracking-wide text-white/30">
-                <span>AI features</span>
-                <span>optional</span>
-              </div>
-              <div className="mt-2 flex flex-wrap gap-2">
-                {aiTags.map((t) => (
-                  <span key={t.label} className={`tag-pill ${t.on ? "tag-pill-on" : "tag-pill-off"}`}>
-                    {t.label}
-                    {t.on && <span aria-hidden>&#10003;</span>}
-                  </span>
-                ))}
-              </div>
+            <div className="mt-4 flex items-center gap-2.5 rounded-lg border border-white/10 bg-white/5 px-3 py-2.5">
+              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand/20 text-[10px] text-brand-light">
+                &#10003;
+              </span>
+              <span className="text-xs text-white/50">Picked up and built by a real developer</span>
             </div>
           </div>
 
@@ -132,9 +72,10 @@ export default function HomePage() {
               {BRAND.tagline}
             </h1>
             <p className="mx-auto mt-6 max-w-xl text-lg text-white/50">
-              We use AI to build fast and keep costs down, but every site is
-              built and checked by a real developer. Submit your idea, and
-              our team builds it before you ever pay a cent.
+              Describe what you want in your own words. A real developer
+              takes it from there and builds it &mdash; no chatbot, no
+              drag-and-drop builder, no code for you to write. You only pay
+              once you&apos;ve seen the real thing.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Link
@@ -168,24 +109,25 @@ export default function HomePage() {
           </div>
           <div className="mt-12 grid gap-6 sm:grid-cols-3">
             <div className="rounded-2xl border border-white/10 bg-night-soft/50 p-6">
-              <h3 className="text-base font-semibold text-white">AI-speed pricing</h3>
+              <h3 className="text-base font-semibold text-white">Just describe it</h3>
               <p className="mt-2 text-sm text-white/50">
-                We build with AI tooling on the backend, so you get
-                website-builder prices, not agency prices.
+                No forms full of jargon, no builder tools to learn. Tell us
+                what you want in plain language and we&apos;ll take it from
+                there.
               </p>
             </div>
             <div className="rounded-2xl border border-white/10 bg-night-soft/50 p-6">
-              <h3 className="text-base font-semibold text-white">Human-built quality</h3>
+              <h3 className="text-base font-semibold text-white">Built by a real developer</h3>
               <p className="mt-2 text-sm text-white/50">
-                A real developer builds and reviews every site. No generic
-                templates, no broken AI output shipped straight to you.
+                Every project is written and reviewed by a person, not
+                generated and shipped without anyone looking at it.
               </p>
             </div>
             <div className="rounded-2xl border border-white/10 bg-night-soft/50 p-6">
-              <h3 className="text-base font-semibold text-white">Real-time AI editing + human support</h3>
+              <h3 className="text-base font-semibold text-white">See it before you pay</h3>
               <p className="mt-2 text-sm text-white/50">
-                Once your site is live, use our integrated AI editor to make
-                changes, and reach a human whenever you get stuck.
+                You get a real, working preview first. You only pay once
+                you&apos;re happy with what you see.
               </p>
             </div>
           </div>
@@ -247,71 +189,26 @@ export default function HomePage() {
                 "Multi-page website",
                 "Contact / booking forms",
                 "Basic SEO setup",
-                "Optional AI chat widget",
-                "Real-time AI editing after launch",
+                "Content updates after launch",
+                "Direct support from your developer",
               ]}
             />
             <PricingCard
-              title="AI & Custom"
+              title="Custom"
               price="$1,000-$5,000"
-              description="AI agents, your own AI product, or something fully custom."
+              description="Something bigger or more complex &mdash; we'll scope it with you."
               features={[
-                "AI agents on your website",
-                "Custom AI-powered product or service",
-                "Local model / self-hosted AI options",
-                "1:1 consultation on the right setup",
-                "Priority human support",
+                "E-commerce & online payments",
+                "Custom integrations & dashboards",
+                "Multi-language / multi-location sites",
+                "1:1 consultation on what you need",
+                "Priority developer support",
               ]}
             />
           </div>
           <p className="mt-8 text-center text-sm text-white/35">
             Not sure where you fall? Submit an inquiry and we&apos;ll quote you exactly, for free.
           </p>
-        </div>
-      </section>
-
-      {/* AI & Custom */}
-      <section id="ai" className="border-t border-white/5 px-6 py-20">
-        <div className="mx-auto max-w-6xl">
-          <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
-            <div>
-              <span className="text-xs font-medium uppercase tracking-widest text-brand-light">AI &amp; custom</span>
-              <h2 className="mt-3 text-3xl font-bold text-white sm:text-4xl">
-                Want AI on your site, or as your product?
-              </h2>
-              <p className="mt-4 text-white/55">
-                We&apos;re not just putting AI on the backend as a shortcut. If
-                you want your customers to interact with AI directly, or you
-                want to build your own AI-powered service, we can design and
-                build that with you.
-              </p>
-              <ul className="mt-6 space-y-3">
-                {aiExtras.map((item) => (
-                  <li key={item} className="flex items-start gap-3 text-sm text-white/65">
-                    <span className="mt-0.5 text-brand-light">&#10003;</span>
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="rounded-2xl border border-white/10 bg-night-soft/50 p-8">
-              <h3 className="text-sm font-semibold text-white">Built on modern AI infrastructure</h3>
-              <p className="mt-3 text-sm text-white/55">
-                Under the hood, our team uses fast, cost-efficient AI models
-                (like DeepSeek) and AI-assisted development tooling to build
-                your site quickly &mdash; which is exactly how we offer
-                AI-website-builder prices while still having a human build and
-                check every project.
-              </p>
-              <div className="mt-6 flex flex-wrap gap-2">
-                {["DeepSeek API", "OpenCode", "Local models", "Human review"].map((tag) => (
-                  <span key={tag} className="tag-pill tag-pill-off">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 

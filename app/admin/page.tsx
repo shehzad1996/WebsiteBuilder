@@ -67,7 +67,6 @@ export default async function AdminPage({
               <th className="px-4 py-3">Contact</th>
               <th className="px-4 py-3">Project</th>
               <th className="px-4 py-3">Budget</th>
-              <th className="px-4 py-3">AI features</th>
               <th className="px-4 py-3">Description</th>
               <th className="px-4 py-3">Status</th>
             </tr>
@@ -75,7 +74,7 @@ export default async function AdminPage({
           <tbody className="divide-y divide-night-border bg-night">
             {inquiries.length === 0 && (
               <tr>
-                <td colSpan={8} className="px-4 py-8 text-center text-white/30">
+                <td colSpan={7} className="px-4 py-8 text-center text-white/30">
                   No inquiries yet.
                 </td>
               </tr>
@@ -98,9 +97,6 @@ export default async function AdminPage({
                   <div className="text-xs text-white/30">{inquiry.timeline}</div>
                 </td>
                 <td className="px-4 py-3 text-white/50">{inquiry.budget}</td>
-                <td className="px-4 py-3 text-white/50">
-                  {inquiry.aiFeatures.length ? inquiry.aiFeatures.join(", ") : "-"}
-                </td>
                 <td className="max-w-xs px-4 py-3 text-white/50">{inquiry.description}</td>
                 <td className="px-4 py-3">
                   <span className="rounded-full bg-night-alt px-2 py-1 text-xs font-medium text-white/60">

@@ -7,7 +7,7 @@ import { BRAND } from "@/lib/brand";
 export const metadata: Metadata = {
   title: `${BRAND.name} — ${BRAND.tagline}`,
   description:
-    "Submit your website idea and get a free, working preview built by real developers, priced like an AI website builder.",
+    "Describe the website you want and get a free, working preview built by a real developer.",
 };
 
 export default function RootLayout({

@@ -2,17 +2,16 @@
 
 > Website builder prices. Human-built quality.
 
-A marketing site + inquiry pipeline for an "AI price, human-built" website
-agency: visitors submit what they want, your dev team builds it for free,
+A marketing site + inquiry pipeline for a website agency: visitors describe
+what they want in their own words, a human developer builds it for free,
 and they only pay once they see the real thing.
 
 ## What's in here
 
 - **Landing page** (`app/page.tsx`) — value proposition, pricing tiers
-  ($50 starter through $1,000–$5,000 AI/custom), how-it-works flow, and an
-  AI/automation section.
+  ($50 starter through $1,000–$5,000 custom), and the how-it-works flow.
 - **Inquiry form** (`app/inquiry/page.tsx` + `app/api/inquiry/route.ts`) —
-  captures project type, budget, timeline, and desired AI features, and
+  a free-text description plus project type, budget, and timeline, and
   stores each submission.
 - **Admin view** (`app/admin/page.tsx`) — a key-gated page for your team to
   see submitted inquiries. Visit `/admin?key=YOUR_ADMIN_KEY`.
@@ -55,10 +54,6 @@ This is a first working version of the platform. Suggested next steps:
   `app/api/inquiry/route.ts`.
 - **Quoting workflow** — a way for your team to turn an inquiry into a
   quote plus a live preview link the customer can review.
-- **Live AI editor** — the "edit your site in real time with AI" experience
-  described on the landing page (e.g. backed by the DeepSeek API or your own
-  agent tooling) is not implemented yet; this repo currently covers the
-  marketing site and inquiry intake.
 - **Payments** — Stripe (or similar) once a customer approves their quote.
 
 ## Rebranding

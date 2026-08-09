@@ -5,7 +5,7 @@ import { useState } from "react";
 const PROJECT_TYPES = [
   "New website",
   "Redesign of an existing website",
-  "AI agent or custom AI service",
+  "Something more complex (e-commerce, custom features)",
   "Hosting & maintenance only",
   "Not sure, I'd like a consultation",
 ];
@@ -19,14 +19,6 @@ const BUDGETS = [
 ];
 
 const TIMELINES = ["ASAP", "Within 2 weeks", "Within a month", "No rush"];
-
-const AI_FEATURES = [
-  "AI chatbot for my website",
-  "AI agent / automation",
-  "My own AI-powered product",
-  "Local / self-hosted models",
-  "None of these",
-];
 
 export default function InquiryPage() {
   const [submitting, setSubmitting] = useState(false);
@@ -49,7 +41,6 @@ export default function InquiryPage() {
       projectType: formData.get("projectType"),
       budget: formData.get("budget"),
       timeline: formData.get("timeline"),
-      aiFeatures: formData.getAll("aiFeatures"),
       description: formData.get("description"),
     };
 
@@ -79,10 +70,10 @@ export default function InquiryPage() {
       <section className="mx-auto max-w-xl px-6 py-24 text-center">
         <h1 className="text-3xl font-bold text-white">Thanks, we&apos;ve got it!</h1>
         <p className="mt-4 text-white/55">
-          Our team will start putting your free preview together. We&apos;ll
-          reach out by email with a working site and your quote. You
-          don&apos;t pay anything until you&apos;ve seen it and you&apos;re
-          happy.
+          A developer will pick this up and start putting your free preview
+          together. We&apos;ll reach out by email with a working site and
+          your quote. You don&apos;t pay anything until you&apos;ve seen it
+          and you&apos;re happy.
         </p>
       </section>
     );
@@ -92,12 +83,22 @@ export default function InquiryPage() {
     <section className="mx-auto max-w-2xl px-6 py-16">
       <h1 className="text-3xl font-bold text-white">Tell us what you want built</h1>
       <p className="mt-3 text-white/55">
-        A couple of minutes now gets you a real, working website built for
-        free. No payment, no commitment, you only decide once you&apos;ve
-        seen it.
+        Describe it in your own words &mdash; that&apos;s the main thing we
+        need. A real developer reads it and builds it. No payment, no
+        commitment, you only decide once you&apos;ve seen it.
       </p>
 
       <form onSubmit={handleSubmit} className="mt-10 space-y-6">
+        <Field label="Describe what you want" required>
+          <textarea
+            name="description"
+            required
+            rows={5}
+            className="input"
+            placeholder="e.g. A website for my takeaway shop with an online menu and order form..."
+          />
+        </Field>
+
         <div className="grid gap-6 sm:grid-cols-2">
           <Field label="Your name" required>
             <input name="name" required className="input" />
@@ -145,35 +146,6 @@ export default function InquiryPage() {
               </option>
             ))}
           </select>
-        </Field>
-
-        <fieldset>
-          <legend className="text-sm font-medium text-white/70">
-            Interested in any AI features?
-          </legend>
-          <div className="mt-3 grid gap-2 sm:grid-cols-2">
-            {AI_FEATURES.map((option) => (
-              <label key={option} className="flex items-center gap-2 text-sm text-white/60">
-                <input
-                  type="checkbox"
-                  name="aiFeatures"
-                  value={option}
-                  className="h-4 w-4 rounded border-night-border bg-night-alt text-brand"
-                />
-                {option}
-              </label>
-            ))}
-          </div>
-        </fieldset>
-
-        <Field label="Describe what you want" required>
-          <textarea
-            name="description"
-            required
-            rows={5}
-            className="input"
-            placeholder="e.g. A website for my takeaway shop with an online menu and order form..."
-          />
         </Field>
 
         {error && <p className="text-sm text-red-400">{error}</p>}

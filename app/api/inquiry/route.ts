@@ -29,10 +29,6 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const aiFeatures = Array.isArray(body.aiFeatures)
-    ? body.aiFeatures.map((v) => String(v))
-    : [];
-
   let inquiry;
   try {
     inquiry = await addInquiry({
@@ -43,7 +39,6 @@ export async function POST(req: NextRequest) {
       projectType: String(body.projectType ?? "Not sure"),
       budget: String(body.budget ?? "Not sure"),
       timeline: String(body.timeline ?? "Not sure"),
-      aiFeatures,
       description,
     });
   } catch (err) {

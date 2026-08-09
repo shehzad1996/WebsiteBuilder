@@ -16,9 +16,6 @@ export default function Nav() {
           <Link href="/#pricing" className="hover:text-white">
             Pricing
           </Link>
-          <Link href="/#ai" className="hover:text-white">
-            AI &amp; automation
-          </Link>
         </nav>
         <Link
           href="/inquiry"

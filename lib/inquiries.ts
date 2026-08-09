@@ -11,7 +11,6 @@ export type Inquiry = {
   projectType: string;
   budget: string;
   timeline: string;
-  aiFeatures: string[];
   description: string;
 };
 
@@ -26,7 +25,6 @@ type InquiryRow = {
   project_type: string;
   budget: string;
   timeline: string;
-  ai_features: string[] | null;
   description: string;
 };
 
@@ -42,7 +40,6 @@ function fromRow(row: InquiryRow): Inquiry {
     projectType: row.project_type,
     budget: row.budget,
     timeline: row.timeline,
-    aiFeatures: row.ai_features ?? [],
     description: row.description,
   };
 }
@@ -72,7 +69,6 @@ export async function addInquiry(
       project_type: input.projectType,
       budget: input.budget,
       timeline: input.timeline,
-      ai_features: input.aiFeatures,
       description: input.description,
     })
     .select()
