@@ -1,4 +1,4 @@
-import { readInquiries } from "@/lib/inquiries";
+import { readInquiries, supabaseConfigured } from "@/lib/inquiries";
 
 export default async function AdminPage({
   searchParams,
@@ -39,13 +39,12 @@ export default async function AdminPage({
   if (loadError) {
     return (
       <section className="mx-auto max-w-xl px-6 py-24">
-        <h1 className="text-2xl font-bold text-white">Database not connected</h1>
+        <h1 className="text-2xl font-bold text-white">Couldn&apos;t load inquiries</h1>
         <p className="mt-3 text-sm text-white/50">{loadError}</p>
         <p className="mt-3 text-sm text-white/40">
-          Set <code>SUPABASE_URL</code> and <code>SUPABASE_SERVICE_ROLE_KEY</code> in
-          your environment, and run the migration in{" "}
-          <code>supabase/migrations/0001_inquiries.sql</code> against your
-          Supabase project.
+          Check <code>SUPABASE_URL</code> / <code>SUPABASE_SERVICE_ROLE_KEY</code>{" "}
+          and that <code>supabase/migrations/0001_inquiries.sql</code> has
+          been run against your Supabase project.
         </p>
       </section>
     );
@@ -55,7 +54,15 @@ export default async function AdminPage({
     <section className="mx-auto max-w-6xl px-6 py-16">
       <h1 className="text-2xl font-bold text-white">Inquiries ({inquiries.length})</h1>
       <p className="mt-2 text-sm text-white/40">
-        Backed by Supabase Postgres.
+        {supabaseConfigured() ? (
+          "Backed by Supabase Postgres."
+        ) : (
+          <>
+            Using temporary file storage &mdash; not durable. Set{" "}
+            <code>SUPABASE_URL</code> and <code>SUPABASE_SERVICE_ROLE_KEY</code>{" "}
+            to switch to Postgres (see README).
+          </>
+        )}
       </p>
 
       <div className="mt-8 overflow-x-auto rounded-xl border border-night-border">
