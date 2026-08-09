@@ -77,8 +77,8 @@ export default function InquiryPage() {
   if (submitted) {
     return (
       <section className="mx-auto max-w-xl px-6 py-24 text-center">
-        <h1 className="text-3xl font-bold text-slate-900">Thanks, we&apos;ve got it!</h1>
-        <p className="mt-4 text-slate-600">
+        <h1 className="font-display text-3xl font-black uppercase tracking-tight text-white">Thanks, we&apos;ve got it!</h1>
+        <p className="mt-4 text-white/60">
           Our team will start putting your free preview together. We&apos;ll
           reach out by email with a working site and your quote. You
           don&apos;t pay anything until you&apos;ve seen it and you&apos;re
@@ -90,8 +90,8 @@ export default function InquiryPage() {
 
   return (
     <section className="mx-auto max-w-2xl px-6 py-16">
-      <h1 className="text-3xl font-bold text-slate-900">Tell us what you want built</h1>
-      <p className="mt-3 text-slate-600">
+      <h1 className="font-display text-3xl font-black uppercase tracking-tight text-white">Tell us what you want built</h1>
+      <p className="mt-3 text-white/60">
         A couple of minutes now gets you a real, working website built for
         free. No payment, no commitment, you only decide once you&apos;ve
         seen it.
@@ -148,17 +148,17 @@ export default function InquiryPage() {
         </Field>
 
         <fieldset>
-          <legend className="text-sm font-medium text-slate-700">
+          <legend className="text-sm font-medium text-white/70">
             Interested in any AI features?
           </legend>
           <div className="mt-3 grid gap-2 sm:grid-cols-2">
             {AI_FEATURES.map((option) => (
-              <label key={option} className="flex items-center gap-2 text-sm text-slate-600">
+              <label key={option} className="flex items-center gap-2 text-sm text-white/60">
                 <input
                   type="checkbox"
                   name="aiFeatures"
                   value={option}
-                  className="h-4 w-4 rounded border-slate-300 text-brand"
+                  className="h-4 w-4 rounded border-night-border bg-night-alt text-brand"
                 />
                 {option}
               </label>
@@ -176,12 +176,12 @@ export default function InquiryPage() {
           />
         </Field>
 
-        {error && <p className="text-sm text-red-600">{error}</p>}
+        {error && <p className="text-sm text-red-400">{error}</p>}
 
         <button
           type="submit"
           disabled={submitting}
-          className="w-full rounded-full bg-brand px-8 py-3 text-base font-semibold text-white transition hover:bg-brand-dark disabled:opacity-60"
+          className="w-full rounded-md bg-brand px-8 py-3 text-base font-bold text-white transition hover:bg-brand-light disabled:opacity-60"
         >
           {submitting ? "Submitting..." : "Submit inquiry, it's free"}
         </button>
@@ -201,9 +201,9 @@ function Field({
 }) {
   return (
     <label className="block">
-      <span className="text-sm font-medium text-slate-700">
+      <span className="text-sm font-medium text-white/70">
         {label}
-        {required && <span className="text-red-500"> *</span>}
+        {required && <span className="text-red-400"> *</span>}
       </span>
       <div className="mt-1">{children}</div>
     </label>

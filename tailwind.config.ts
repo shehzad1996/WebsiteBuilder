@@ -9,10 +9,27 @@ const config: Config = {
     extend: {
       colors: {
         brand: {
-          DEFAULT: "#4f46e5",
-          light: "#818cf8",
-          dark: "#3730a3",
+          DEFAULT: "#ff5a1f",
+          light: "#ff7a45",
+          dark: "#e0430f",
+          soft: "#2a1b12",
         },
+        night: {
+          DEFAULT: "#0b0b0f",
+          soft: "#151519",
+          alt: "#1c1c22",
+          border: "#2a2a32",
+          bordersoft: "#232329",
+        },
+      },
+      fontFamily: {
+        display: [
+          "Helvetica Neue",
+          "Arial Black",
+          "Inter",
+          "system-ui",
+          "sans-serif",
+        ],
       },
     },
   },

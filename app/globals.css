@@ -4,6 +4,6 @@
 
 @layer components {
   .input {
-    @apply w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 shadow-sm focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand;
+    @apply w-full rounded-md border border-night-border bg-night-alt px-3 py-2 text-sm text-white placeholder-white/30 shadow-sm focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand;
   }
 }
