@@ -112,6 +112,18 @@ export default function HomePage() {
             </p>
           </div>
 
+          <div className="mx-auto mt-10 max-w-3xl overflow-hidden rounded-2xl border border-white/10 bg-night-soft/50 shadow-2xl">
+            <video
+              className="aspect-video w-full"
+              controls
+              muted
+              playsInline
+              preload="metadata"
+            >
+              <source src="/videos/ai-website-trap.mp4" type="video/mp4" />
+            </video>
+          </div>
+
           <div className="mt-12">
             <ComparisonReel />
           </div>
