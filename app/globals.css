@@ -4,6 +4,16 @@
 
 @layer components {
   .input {
-    @apply w-full rounded-md border border-night-border bg-night-alt px-3 py-2 text-sm text-white placeholder-white/30 shadow-sm focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand;
+    @apply w-full rounded-lg border border-night-border bg-night-alt px-3 py-2 text-sm text-white placeholder-white/30 shadow-sm focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand;
+  }
+
+  .tag-pill {
+    @apply inline-flex items-center gap-1 rounded-full border px-3 py-1 text-xs font-medium;
+  }
+  .tag-pill-on {
+    @apply border-brand/40 bg-brand/15 text-brand-light;
+  }
+  .tag-pill-off {
+    @apply border-white/10 bg-white/5 text-white/40;
   }
 }

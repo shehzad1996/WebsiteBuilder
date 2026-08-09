@@ -77,8 +77,8 @@ export default function InquiryPage() {
   if (submitted) {
     return (
       <section className="mx-auto max-w-xl px-6 py-24 text-center">
-        <h1 className="font-display text-3xl font-black uppercase tracking-tight text-white">Thanks, we&apos;ve got it!</h1>
-        <p className="mt-4 text-white/60">
+        <h1 className="text-3xl font-bold text-white">Thanks, we&apos;ve got it!</h1>
+        <p className="mt-4 text-white/55">
           Our team will start putting your free preview together. We&apos;ll
           reach out by email with a working site and your quote. You
           don&apos;t pay anything until you&apos;ve seen it and you&apos;re
@@ -90,8 +90,8 @@ export default function InquiryPage() {
 
   return (
     <section className="mx-auto max-w-2xl px-6 py-16">
-      <h1 className="font-display text-3xl font-black uppercase tracking-tight text-white">Tell us what you want built</h1>
-      <p className="mt-3 text-white/60">
+      <h1 className="text-3xl font-bold text-white">Tell us what you want built</h1>
+      <p className="mt-3 text-white/55">
         A couple of minutes now gets you a real, working website built for
         free. No payment, no commitment, you only decide once you&apos;ve
         seen it.
@@ -181,7 +181,7 @@ export default function InquiryPage() {
         <button
           type="submit"
           disabled={submitting}
-          className="w-full rounded-md bg-brand px-8 py-3 text-base font-bold text-white transition hover:bg-brand-light disabled:opacity-60"
+          className="w-full rounded-full bg-white px-8 py-3 text-sm font-semibold text-night transition hover:bg-white/90 disabled:opacity-60"
         >
           {submitting ? "Submitting..." : "Submit inquiry, it's free"}
         </button>

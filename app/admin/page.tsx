@@ -11,7 +11,7 @@ export default async function AdminPage({
   if (!providedKey || providedKey !== adminKey) {
     return (
       <section className="mx-auto max-w-md px-6 py-24">
-        <h1 className="font-display text-2xl font-black uppercase tracking-tight text-white">Admin access</h1>
+        <h1 className="text-2xl font-bold text-white">Admin access</h1>
         <p className="mt-2 text-sm text-white/50">
           Enter the admin key to view submitted inquiries.
         </p>
@@ -19,7 +19,7 @@ export default async function AdminPage({
           <input type="password" name="key" placeholder="Admin key" className="input" />
           <button
             type="submit"
-            className="rounded-md bg-brand px-4 py-2 text-sm font-bold text-white hover:bg-brand-light"
+            className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-night hover:bg-white/90"
           >
             Enter
           </button>
@@ -32,7 +32,7 @@ export default async function AdminPage({
 
   return (
     <section className="mx-auto max-w-6xl px-6 py-16">
-      <h1 className="font-display text-2xl font-black uppercase tracking-tight text-white">Inquiries ({inquiries.length})</h1>
+      <h1 className="text-2xl font-bold text-white">Inquiries ({inquiries.length})</h1>
       <p className="mt-2 text-sm text-white/40">
         Stored temporarily on the server. Wire up a real database before
         relying on this in production (see README).

@@ -10,26 +10,20 @@ const config: Config = {
       colors: {
         brand: {
           DEFAULT: "#ff5a1f",
-          light: "#ff7a45",
+          light: "#ff8a54",
           dark: "#e0430f",
           soft: "#2a1b12",
         },
-        night: {
-          DEFAULT: "#0b0b0f",
-          soft: "#151519",
-          alt: "#1c1c22",
-          border: "#2a2a32",
-          bordersoft: "#232329",
+        violet: {
+          DEFAULT: "#7c5cff",
+          soft: "#221c3a",
         },
-      },
-      fontFamily: {
-        display: [
-          "Helvetica Neue",
-          "Arial Black",
-          "Inter",
-          "system-ui",
-          "sans-serif",
-        ],
+        night: {
+          DEFAULT: "#0a0a0c",
+          soft: "#131316",
+          alt: "#1a1a1e",
+          border: "#232326",
+        },
       },
     },
   },

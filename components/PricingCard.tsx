@@ -17,36 +17,28 @@ export default function PricingCard({
 }: PricingCardProps) {
   return (
     <div
-      className={`flex flex-col rounded-xl border p-8 ${
+      className={`flex flex-col rounded-2xl border p-8 ${
         highlighted
-          ? "border-brand bg-brand text-white shadow-2xl shadow-brand/30"
-          : "border-night-border bg-night-soft"
+          ? "border-brand/50 bg-night-soft shadow-[0_0_0_1px_rgba(255,90,31,0.15),0_20px_60px_-15px_rgba(255,90,31,0.3)]"
+          : "border-white/10 bg-night-soft/60"
       }`}
     >
       {highlighted && (
-        <span className="mb-4 inline-block w-fit rounded-full bg-white/20 px-3 py-1 text-xs font-bold uppercase tracking-wide">
+        <span className="mb-4 inline-block w-fit rounded-full border border-brand/40 bg-brand/15 px-3 py-1 text-xs font-medium text-brand-light">
           Most popular
         </span>
       )}
-      <h3 className={`text-lg font-bold ${highlighted ? "text-white" : "text-white"}`}>
-        {title}
-      </h3>
-      <p className={`mt-2 font-display text-3xl font-black ${highlighted ? "text-white" : "text-white"}`}>
+      <h3 className="text-base font-semibold text-white">{title}</h3>
+      <p className={`mt-2 text-3xl font-bold ${highlighted ? "text-brand-light" : "text-white"}`}>
         {price}
-        {cadence && (
-          <span className={`ml-1 text-base font-normal ${highlighted ? "text-white/70" : "text-white/40"}`}>
-            {cadence}
-          </span>
-        )}
+        {cadence && <span className="ml-1 text-base font-normal text-white/40">{cadence}</span>}
       </p>
-      <p className={`mt-3 text-sm ${highlighted ? "text-white/85" : "text-white/50"}`}>
-        {description}
-      </p>
+      <p className="mt-3 text-sm text-white/50">{description}</p>
       <ul className="mt-6 flex-1 space-y-3 text-sm">
         {features.map((feature) => (
           <li key={feature} className="flex items-start gap-2">
-            <span className={highlighted ? "text-white" : "text-brand"}>&#10003;</span>
-            <span className={highlighted ? "text-white/90" : "text-white/70"}>{feature}</span>
+            <span className={highlighted ? "text-brand-light" : "text-white/30"}>&#10003;</span>
+            <span className="text-white/70">{feature}</span>
           </li>
         ))}
       </ul>

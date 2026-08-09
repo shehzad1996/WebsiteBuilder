@@ -3,12 +3,13 @@ import { BRAND } from "@/lib/brand";
 
 export default function Nav() {
   return (
-    <header className="sticky top-0 z-50 border-b border-night-border bg-night/85 backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-white/5 bg-night/70 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <Link href="/" className="font-display text-lg font-black uppercase tracking-tight text-white">
+        <Link href="/" className="flex items-center gap-2 text-[15px] font-semibold text-white">
+          <span className="flex h-6 w-6 items-center justify-center rounded-md bg-brand text-xs font-bold">P</span>
           {BRAND.name}
         </Link>
-        <nav className="hidden items-center gap-8 text-sm font-medium text-white/60 sm:flex">
+        <nav className="hidden items-center gap-8 text-sm text-white/50 sm:flex">
           <Link href="/#how-it-works" className="hover:text-white">
             How it works
           </Link>
@@ -21,7 +22,7 @@ export default function Nav() {
         </nav>
         <Link
           href="/inquiry"
-          className="rounded-md bg-brand px-5 py-2 text-sm font-bold text-white transition hover:bg-brand-light"
+          className="rounded-full bg-white px-5 py-2 text-sm font-semibold text-night transition hover:bg-white/90"
         >
           Get a free quote
         </Link>
