@@ -1,7 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 import { addInquiry } from "@/lib/inquiries";
+import { createClient } from "@/lib/supabase/server";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+/** The signed-in user's id, if any — or undefined if signed out or if
+ * Supabase auth isn't configured. Submitting stays open either way. */
+async function currentUserId(): Promise<string | undefined> {
+  try {
+    const supabase = createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    return user?.id;
+  } catch {
+    return undefined;
+  }
+}
 
 export async function POST(req: NextRequest) {
   let body: Record<string, unknown>;
@@ -40,6 +55,7 @@ export async function POST(req: NextRequest) {
       budget: String(body.budget ?? "Not sure"),
       timeline: String(body.timeline ?? "Not sure"),
       description,
+      userId: await currentUserId(),
     });
   } catch (err) {
     console.error("Failed to save inquiry:", err);

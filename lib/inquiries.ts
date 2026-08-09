@@ -16,6 +16,8 @@ export type Inquiry = {
   budget: string;
   timeline: string;
   description: string;
+  /** The submitting user's auth id, if they were signed in. */
+  userId?: string;
 };
 
 type NewInquiry = Omit<Inquiry, "id" | "createdAt" | "status">;
@@ -56,6 +58,7 @@ type InquiryRow = {
   budget: string;
   timeline: string;
   description: string;
+  user_id: string | null;
 };
 
 function fromRow(row: InquiryRow): Inquiry {
@@ -71,6 +74,7 @@ function fromRow(row: InquiryRow): Inquiry {
     budget: row.budget,
     timeline: row.timeline,
     description: row.description,
+    userId: row.user_id ?? undefined,
   };
 }
 
@@ -98,6 +102,7 @@ async function addToSupabase(input: NewInquiry): Promise<Inquiry> {
       budget: input.budget,
       timeline: input.timeline,
       description: input.description,
+      user_id: input.userId ?? null,
     })
     .select()
     .single();

@@ -1,69 +1,82 @@
-import { readInquiries, supabaseConfigured } from "@/lib/inquiries";
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
 
-export default async function AdminPage({
-  searchParams,
-}: {
-  searchParams: { key?: string };
-}) {
-  const adminKey = process.env.ADMIN_KEY ?? "changeme";
-  const providedKey = searchParams.key;
-
-  if (!providedKey || providedKey !== adminKey) {
+export default async function AdminPage() {
+  let supabase;
+  try {
+    supabase = createClient();
+  } catch {
     return (
-      <section className="mx-auto max-w-md px-6 py-24">
-        <h1 className="text-2xl font-bold text-white">Admin access</h1>
-        <p className="mt-2 text-sm text-white/50">
-          Enter the admin key to view submitted inquiries.
+      <section className="mx-auto max-w-xl px-6 py-24 text-center">
+        <h1 className="text-2xl font-bold text-white">Admin isn&apos;t set up yet</h1>
+        <p className="mt-3 text-sm text-white/50">
+          Set <code>NEXT_PUBLIC_SUPABASE_URL</code> and{" "}
+          <code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code>, then run{" "}
+          <code>supabase/migrations/0002_auth_and_profiles.sql</code> (see README).
         </p>
-        <form method="GET" className="mt-6 flex gap-2">
-          <input type="password" name="key" placeholder="Admin key" className="input" />
+      </section>
+    );
+  }
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect("/admin/login");
+  }
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  if (profile?.role !== "admin") {
+    return (
+      <section className="mx-auto max-w-md px-6 py-24 text-center">
+        <h1 className="text-2xl font-bold text-white">Not authorized</h1>
+        <p className="mt-3 text-sm text-white/50">
+          {user.email} is signed in but isn&apos;t an admin.
+        </p>
+        <form action="/auth/signout" method="POST" className="mt-6">
           <button
             type="submit"
-            className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-night hover:bg-white/90"
+            className="rounded-full border border-white/15 px-6 py-2.5 text-sm font-semibold text-white/80 hover:border-white/30"
           >
-            Enter
+            Sign out
           </button>
         </form>
       </section>
     );
   }
 
-  let inquiries: Awaited<ReturnType<typeof readInquiries>> = [];
-  let loadError: string | null = null;
-  try {
-    inquiries = await readInquiries();
-  } catch (err) {
-    loadError = err instanceof Error ? err.message : "Could not load inquiries.";
-  }
-
-  if (loadError) {
-    return (
-      <section className="mx-auto max-w-xl px-6 py-24">
-        <h1 className="text-2xl font-bold text-white">Couldn&apos;t load inquiries</h1>
-        <p className="mt-3 text-sm text-white/50">{loadError}</p>
-        <p className="mt-3 text-sm text-white/40">
-          Check <code>SUPABASE_URL</code> / <code>SUPABASE_SERVICE_ROLE_KEY</code>{" "}
-          and that <code>supabase/migrations/0001_inquiries.sql</code> has
-          been run against your Supabase project.
-        </p>
-      </section>
-    );
-  }
+  // RLS ("Admins can view all inquiries") lets this admin see every row.
+  const { data: inquiries, error } = await supabase
+    .from("inquiries")
+    .select("*")
+    .order("created_at", { ascending: false });
 
   return (
     <section className="mx-auto max-w-6xl px-6 py-16">
-      <h1 className="text-2xl font-bold text-white">Inquiries ({inquiries.length})</h1>
-      <p className="mt-2 text-sm text-white/40">
-        {supabaseConfigured() ? (
-          "Backed by Supabase Postgres."
-        ) : (
-          <>
-            Using temporary file storage &mdash; not durable. Set{" "}
-            <code>SUPABASE_URL</code> and <code>SUPABASE_SERVICE_ROLE_KEY</code>{" "}
-            to switch to Postgres (see README).
-          </>
-        )}
-      </p>
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <h1 className="text-2xl font-bold text-white">Inquiries ({inquiries?.length ?? 0})</h1>
+        <form action="/auth/signout" method="POST">
+          <button
+            type="submit"
+            className="rounded-full border border-white/15 px-4 py-2 text-xs font-semibold text-white/60 hover:border-white/30"
+          >
+            Sign out
+          </button>
+        </form>
+      </div>
+      <p className="mt-2 text-sm text-white/40">Signed in as {user.email}</p>
+
+      {error && (
+        <p className="mt-6 text-sm text-red-400">
+          Couldn&apos;t load inquiries: {error.message}
+        </p>
+      )}
 
       <div className="mt-8 overflow-x-auto rounded-xl border border-night-border">
         <table className="min-w-full divide-y divide-night-border text-sm">
@@ -79,17 +92,17 @@ export default async function AdminPage({
             </tr>
           </thead>
           <tbody className="divide-y divide-night-border bg-night">
-            {inquiries.length === 0 && (
+            {(!inquiries || inquiries.length === 0) && (
               <tr>
                 <td colSpan={7} className="px-4 py-8 text-center text-white/30">
                   No inquiries yet.
                 </td>
               </tr>
             )}
-            {inquiries.map((inquiry) => (
+            {inquiries?.map((inquiry) => (
               <tr key={inquiry.id}>
                 <td className="whitespace-nowrap px-4 py-3 text-white/50">
-                  {new Date(inquiry.createdAt).toLocaleString()}
+                  {new Date(inquiry.created_at).toLocaleString()}
                 </td>
                 <td className="px-4 py-3 font-medium text-white">{inquiry.name}</td>
                 <td className="px-4 py-3 text-white/50">
@@ -97,10 +110,10 @@ export default async function AdminPage({
                   {inquiry.phone && <div>{inquiry.phone}</div>}
                 </td>
                 <td className="px-4 py-3 text-white/50">
-                  {inquiry.projectName && (
-                    <div className="font-medium text-white/80">{inquiry.projectName}</div>
+                  {inquiry.project_name && (
+                    <div className="font-medium text-white/80">{inquiry.project_name}</div>
                   )}
-                  <div>{inquiry.projectType}</div>
+                  <div>{inquiry.project_type}</div>
                   <div className="text-xs text-white/30">{inquiry.timeline}</div>
                 </td>
                 <td className="px-4 py-3 text-white/50">{inquiry.budget}</td>

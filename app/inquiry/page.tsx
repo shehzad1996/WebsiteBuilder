@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
 const PROJECT_TYPES = [
   "New website",
@@ -74,6 +75,12 @@ export default function InquiryPage() {
           together. We&apos;ll reach out by email with a working site and
           your quote. You don&apos;t pay anything until you&apos;ve seen it
           and you&apos;re happy.
+        </p>
+        <p className="mt-6 text-sm text-white/40">
+          Want to track it online?{" "}
+          <Link href="/signup" className="text-brand-light hover:underline">
+            Create an account
+          </Link>
         </p>
       </section>
     );
