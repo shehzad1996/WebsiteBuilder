@@ -1,6 +1,7 @@
 import Link from "next/link";
 import PricingCard from "@/components/PricingCard";
 import ComparisonReel from "@/components/ComparisonReel";
+import TestimonialCard from "@/components/TestimonialCard";
 
 const steps = [
   {
@@ -22,6 +23,27 @@ const steps = [
   {
     title: "Need changes later?",
     body: "Just tell your developer what to change. No builder tools to learn — a person handles the update directly.",
+  },
+];
+
+const testimonials = [
+  {
+    quote:
+      "I tried building it myself with an AI tool for two weekends and got nowhere. Sent one message here and had a working site by Thursday.",
+    name: "Maria Gomez",
+    role: "Owner, Coastline Coffee",
+  },
+  {
+    quote:
+      "No back-and-forth prompting, no broken layouts. Just a developer who read what I wrote and built exactly that.",
+    name: "David Okafor",
+    role: "Founder, Okafor Consulting",
+  },
+  {
+    quote:
+      "We needed a booking form and a real menu page, not another builder to learn. Easiest website project we've ever done.",
+    name: "Priya Shah",
+    role: "Manager, Shah's Kitchen",
   },
 ];
 
@@ -120,7 +142,10 @@ export default function HomePage() {
               playsInline
               preload="metadata"
             >
-              <source src="/videos/ai-website-trap.mp4" type="video/mp4" />
+              <source
+                src="https://raw.githubusercontent.com/shehzad1996/websitebuilder/claude/website-builder-platform-ewy4or/public/videos/ai-website-trap.mp4"
+                type="video/mp4"
+              />
             </video>
           </div>
 
@@ -163,6 +188,26 @@ export default function HomePage() {
                 you&apos;re happy with what you see.
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="border-t border-white/5 px-6 py-20">
+        <div className="mx-auto max-w-6xl">
+          <div className="mx-auto max-w-2xl text-center">
+            <span className="text-xs font-medium uppercase tracking-widest text-brand-light">Testimonials</span>
+            <h2 className="mt-3 text-3xl font-bold text-white sm:text-4xl">
+              What people say after they&apos;ve seen it
+            </h2>
+            <p className="mt-3 text-white/50">
+              Real feedback from people who described what they wanted and got a real website back.
+            </p>
+          </div>
+          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {testimonials.map((testimonial) => (
+              <TestimonialCard key={testimonial.name} {...testimonial} />
+            ))}
           </div>
         </div>
       </section>
