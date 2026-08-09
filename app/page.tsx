@@ -68,13 +68,13 @@ export default function HomePage() {
 
           <div className="mt-14 text-center">
             <h1 className="mx-auto max-w-3xl text-4xl font-bold leading-tight tracking-tight text-white sm:text-6xl">
-              Just using AI doesn&apos;t give you a good website.
+              Stop prompting. Let a developer build it for you.
             </h1>
             <p className="mx-auto mt-6 max-w-xl text-lg text-white/50">
-              It gives you a generic one. Describe what you want in your own
-              words &mdash; a real developer builds it and sends you the
-              link when it&apos;s ready. You only pay once you&apos;ve seen
-              the real thing.
+              Going back and forth tweaking prompts wastes your time. Our
+              team has shipped hundreds of projects &mdash; describe what
+              you want once, and a real developer builds your website for
+              free. You only pay when you like it.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Link
@@ -91,7 +91,7 @@ export default function HomePage() {
               </Link>
             </div>
             <p className="mt-6 text-xs text-white/30">
-              $50&ndash;$5,000 per project &middot; Built free, pay only if you love it &middot; Every site human-reviewed
+              100s of projects delivered &middot; Free to build, pay when you like it &middot; Hosting &amp; maintenance from $150/yr
             </p>
           </div>
         </div>
@@ -108,18 +108,19 @@ export default function HomePage() {
           </div>
           <div className="mt-12 grid gap-6 sm:grid-cols-3">
             <div className="rounded-2xl border border-white/10 bg-night-soft/50 p-6">
-              <h3 className="text-base font-semibold text-white">Just describe it</h3>
+              <h3 className="text-base font-semibold text-white">Say it once, not ten times</h3>
               <p className="mt-2 text-sm text-white/50">
-                No forms full of jargon, no builder tools to learn. Tell us
-                what you want in plain language and we&apos;ll take it from
-                there.
+                No back-and-forth tweaking a prompt until it looks right.
+                Tell us what you want once, in plain language, and a
+                developer takes it from there.
               </p>
             </div>
             <div className="rounded-2xl border border-white/10 bg-night-soft/50 p-6">
-              <h3 className="text-base font-semibold text-white">Built by a real developer</h3>
+              <h3 className="text-base font-semibold text-white">A team behind every project</h3>
               <p className="mt-2 text-sm text-white/50">
-                Every project is written and reviewed by a person, not
-                generated and shipped without anyone looking at it.
+                We&apos;ve shipped hundreds of projects. Yours is written and
+                reviewed by a real developer, not generated and handed to
+                you unchecked.
               </p>
             </div>
             <div className="rounded-2xl border border-white/10 bg-night-soft/50 p-6">
