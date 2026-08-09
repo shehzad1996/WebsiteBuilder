@@ -1,6 +1,5 @@
 import Link from "next/link";
 import PricingCard from "@/components/PricingCard";
-import { BRAND } from "@/lib/brand";
 
 const steps = [
   {
@@ -69,13 +68,13 @@ export default function HomePage() {
 
           <div className="mt-14 text-center">
             <h1 className="mx-auto max-w-3xl text-4xl font-bold leading-tight tracking-tight text-white sm:text-6xl">
-              {BRAND.tagline}
+              Just using AI doesn&apos;t give you a good website.
             </h1>
             <p className="mx-auto mt-6 max-w-xl text-lg text-white/50">
-              Describe what you want in your own words. A real developer
-              takes it from there and builds it &mdash; no chatbot, no
-              drag-and-drop builder, no code for you to write. You only pay
-              once you&apos;ve seen the real thing.
+              It gives you a generic one. Describe what you want in your own
+              words &mdash; a real developer builds it and sends you the
+              link when it&apos;s ready. You only pay once you&apos;ve seen
+              the real thing.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Link
