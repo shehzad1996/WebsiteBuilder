@@ -1,5 +1,6 @@
 import { promises as fs } from "fs";
 import path from "path";
+import os from "os";
 import { randomUUID } from "crypto";
 
 export type Inquiry = {
@@ -17,8 +18,12 @@ export type Inquiry = {
   description: string;
 };
 
-const DATA_DIR = path.join(process.cwd(), "data");
-const DATA_FILE = path.join(DATA_DIR, "inquiries.json");
+// Vercel's serverless filesystem is read-only everywhere except os.tmpdir(),
+// so we write there instead of the app directory. This keeps the demo from
+// crashing on deploy, but data still does not persist reliably between
+// invocations (a fresh instance gets a fresh /tmp). See the NOTE below.
+const DATA_DIR = process.env.INQUIRIES_DIR ?? os.tmpdir();
+const DATA_FILE = path.join(DATA_DIR, "pixelhuman-inquiries.json");
 
 async function ensureStore() {
   await fs.mkdir(DATA_DIR, { recursive: true });
@@ -30,12 +35,12 @@ async function ensureStore() {
 }
 
 /**
- * NOTE: this stores inquiries in a local JSON file, which is fine for local
- * development and small self-hosted deployments, but will NOT persist
- * reliably on serverless platforms (e.g. Vercel) because their filesystem
- * is read-only/ephemeral outside of a single request.
+ * NOTE: this stores inquiries in a JSON file on disk, which is fine for
+ * local development, but will NOT persist reliably on serverless platforms
+ * (e.g. Vercel) since each function invocation can land on a different,
+ * short-lived instance.
  *
- * Before going live on serverless hosting, swap this module for a real
+ * Before going live for real customers, swap this module for a real
  * database (Postgres via Supabase is a good default) while keeping the
  * same readInquiries/addInquiry interface so nothing else has to change.
  */
