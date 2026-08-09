@@ -33,17 +33,26 @@ export async function POST(req: NextRequest) {
     ? body.aiFeatures.map((v) => String(v))
     : [];
 
-  const inquiry = await addInquiry({
-    name,
-    email,
-    phone: body.phone ? String(body.phone).trim() : undefined,
-    projectName: body.projectName ? String(body.projectName).trim() : undefined,
-    projectType: String(body.projectType ?? "Not sure"),
-    budget: String(body.budget ?? "Not sure"),
-    timeline: String(body.timeline ?? "Not sure"),
-    aiFeatures,
-    description,
-  });
+  let inquiry;
+  try {
+    inquiry = await addInquiry({
+      name,
+      email,
+      phone: body.phone ? String(body.phone).trim() : undefined,
+      projectName: body.projectName ? String(body.projectName).trim() : undefined,
+      projectType: String(body.projectType ?? "Not sure"),
+      budget: String(body.budget ?? "Not sure"),
+      timeline: String(body.timeline ?? "Not sure"),
+      aiFeatures,
+      description,
+    });
+  } catch (err) {
+    console.error("Failed to save inquiry:", err);
+    return NextResponse.json(
+      { error: "Something went wrong saving your inquiry. Please email us directly and we'll pick it up from there." },
+      { status: 500 }
+    );
+  }
 
   // TODO: send a notification email (e.g. via Resend) to the team and a
   // confirmation email to the customer once an email provider is wired up.

@@ -19,32 +19,35 @@ and they only pay once they see the real thing.
 
 ## Getting started
 
+1. Create a free project at [supabase.com](https://supabase.com).
+2. In the Supabase dashboard's **SQL Editor**, run
+   `supabase/migrations/0001_inquiries.sql` to create the `inquiries` table.
+3. In **Settings → API**, copy the **Project URL** and the **service_role**
+   key (not the anon key — the service role key is required server-side).
+
 ```bash
 npm install
-cp .env.example .env.local   # set ADMIN_KEY to something private
+cp .env.example .env.local
+# set ADMIN_KEY, SUPABASE_URL, and SUPABASE_SERVICE_ROLE_KEY in .env.local
 npm run dev
 ```
 
-Visit `http://localhost:3000`.
+Visit `http://localhost:3000`. Set the same three variables in your Vercel
+project's Environment Variables before deploying.
 
-## Storage — read before deploying
+## Storage
 
-Inquiries are currently stored in `data/inquiries.json` via
-`lib/inquiries.ts`. This is fine for local development or a small
-self-hosted server, but **will not persist reliably on serverless hosting**
-(e.g. Vercel), since the filesystem there is read-only/ephemeral outside a
-single request.
-
-Before going live, swap `lib/inquiries.ts` for a real database — Postgres
-via Supabase is a solid default — while keeping the same
-`readInquiries` / `addInquiry` function signatures so nothing else in the
-app has to change.
+Inquiries are stored in Supabase Postgres via `lib/inquiries.ts`
+(`readInquiries` / `addInquiry`). `SUPABASE_SERVICE_ROLE_KEY` bypasses Row
+Level Security and is used **server-only** — it's read in `lib/supabase.ts`,
+which is never imported from a `"use client"` file, so it's not exposed to
+the browser bundle. Don't add a public/anon RLS policy to the `inquiries`
+table; it should only be reachable through the service role key.
 
 ## Roadmap / not yet built
 
 This is a first working version of the platform. Suggested next steps:
 
-- **Real database** for inquiries (see above).
 - **Real admin auth** — the current `/admin?key=...` gate is a placeholder,
   not real authentication.
 - **Email notifications** — notify your team and the customer on

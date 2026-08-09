@@ -28,14 +28,34 @@ export default async function AdminPage({
     );
   }
 
-  const inquiries = await readInquiries();
+  let inquiries: Awaited<ReturnType<typeof readInquiries>> = [];
+  let loadError: string | null = null;
+  try {
+    inquiries = await readInquiries();
+  } catch (err) {
+    loadError = err instanceof Error ? err.message : "Could not load inquiries.";
+  }
+
+  if (loadError) {
+    return (
+      <section className="mx-auto max-w-xl px-6 py-24">
+        <h1 className="text-2xl font-bold text-white">Database not connected</h1>
+        <p className="mt-3 text-sm text-white/50">{loadError}</p>
+        <p className="mt-3 text-sm text-white/40">
+          Set <code>SUPABASE_URL</code> and <code>SUPABASE_SERVICE_ROLE_KEY</code> in
+          your environment, and run the migration in{" "}
+          <code>supabase/migrations/0001_inquiries.sql</code> against your
+          Supabase project.
+        </p>
+      </section>
+    );
+  }
 
   return (
     <section className="mx-auto max-w-6xl px-6 py-16">
       <h1 className="text-2xl font-bold text-white">Inquiries ({inquiries.length})</h1>
       <p className="mt-2 text-sm text-white/40">
-        Stored temporarily on the server. Wire up a real database before
-        relying on this in production (see README).
+        Backed by Supabase Postgres.
       </p>
 
       <div className="mt-8 overflow-x-auto rounded-xl border border-night-border">
