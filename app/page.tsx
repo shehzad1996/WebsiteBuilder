@@ -97,6 +97,100 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Prompting alone vs. us */}
+      <section className="border-t border-white/5 px-6 py-20">
+        <div className="mx-auto max-w-6xl">
+          <div className="mx-auto max-w-2xl text-center">
+            <span className="text-xs font-medium uppercase tracking-widest text-brand-light">Sound familiar?</span>
+            <h2 className="mt-3 text-3xl font-bold text-white sm:text-4xl">
+              Prompting an AI builder is a slow way to lose money
+            </h2>
+            <p className="mt-3 text-white/50">
+              Every fix is another prompt. Every prompt costs tokens &mdash;
+              whether it works or not.
+            </p>
+          </div>
+
+          <div className="mt-12 grid items-start gap-6 lg:grid-cols-2">
+            {/* Pain */}
+            <div className="rounded-2xl border border-red-500/20 bg-night-soft/40 p-6">
+              <div className="flex items-center justify-between">
+                <h3 className="text-base font-semibold text-white">Building it yourself, with AI</h3>
+                <span className="rounded-full border border-red-500/30 bg-red-500/10 px-2.5 py-1 text-[11px] font-medium text-red-300">
+                  Still not done
+                </span>
+              </div>
+
+              <div className="mt-4 space-y-2.5">
+                {[
+                  { prompt: "“Make it look more professional”", cost: "$0.40" },
+                  { prompt: "“The layout broke on mobile”", cost: "$0.65" },
+                  { prompt: "“Now the contact form doesn’t work”", cost: "$0.55" },
+                  { prompt: "“Try again, from scratch”", cost: "$1.85" },
+                ].map((attempt) => (
+                  <div key={attempt.prompt} className="flex items-center justify-between gap-3 text-sm">
+                    <span className="flex items-center gap-2 text-white/50">
+                      <svg
+                        className="h-3.5 w-3.5 shrink-0 animate-spin text-red-400/70"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        aria-hidden
+                      >
+                        <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2.5" strokeOpacity="0.25" />
+                        <path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                      </svg>
+                      {attempt.prompt}
+                    </span>
+                    <span className="shrink-0 text-red-300/80">{attempt.cost}</span>
+                  </div>
+                ))}
+                <div className="pl-6 text-sm text-white/30">&hellip; and it keeps going</div>
+              </div>
+
+              <div className="mt-4 flex items-center justify-between border-t border-white/10 pt-4">
+                <span className="text-sm text-white/40">Total spent</span>
+                <span className="font-bold text-red-300">$14.85+</span>
+              </div>
+              <p className="mt-2 text-sm text-red-300/80">Result: still broken, or still not right.</p>
+            </div>
+
+            {/* Us */}
+            <div className="rounded-2xl border border-brand/30 bg-night-soft/60 p-6">
+              <div className="flex items-center justify-between">
+                <h3 className="text-base font-semibold text-white">Building it with us</h3>
+                <span className="rounded-full border border-brand/40 bg-brand/15 px-2.5 py-1 text-[11px] font-medium text-brand-light">
+                  Free to build
+                </span>
+              </div>
+
+              <div className="mt-4 space-y-2.5">
+                {[
+                  "Describe your website once",
+                  "A real developer builds it",
+                  "You review the actual working site",
+                ].map((step) => (
+                  <div key={step} className="flex items-center justify-between gap-3 text-sm">
+                    <span className="flex items-center gap-2 text-white/70">
+                      <span className="flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-brand/20 text-[9px] text-brand-light">
+                        &#10003;
+                      </span>
+                      {step}
+                    </span>
+                    <span className="shrink-0 text-brand-light">$0</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-4 flex items-center justify-between border-t border-white/10 pt-4">
+                <span className="text-sm text-white/40">Total spent</span>
+                <span className="font-bold text-brand-light">$0 until you like it</span>
+              </div>
+              <p className="mt-2 text-sm text-white/60">Result: a real, working website.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Why it works */}
       <section className="border-t border-white/5 px-6 py-20">
         <div className="mx-auto max-w-6xl">
