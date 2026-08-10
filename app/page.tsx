@@ -91,13 +91,14 @@ export default function HomePage() {
 
           <div className="mt-14 text-center">
             <h1 className="mx-auto max-w-3xl text-4xl font-bold leading-tight tracking-tight text-white sm:text-6xl">
-              Stop prompting. Let a developer build it for you.
+              AI is a great tool. A great website is still an architecture decision.
             </h1>
             <p className="mx-auto mt-6 max-w-xl text-lg text-white/50">
-              Going back and forth tweaking prompts wastes your time. Our
-              team has shipped hundreds of projects &mdash; describe what
-              you want once, and a real developer builds your website for
-              free. You only pay when you like it.
+              AI can spin up a page fast, but structure, hosting, and how the
+              pieces fit together are calls a real developer makes, not a
+              prompt. Our team has shipped hundreds of projects &mdash;
+              describe what you want once, and a real developer builds your
+              website for free. You only pay when you like it.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Link
@@ -124,13 +125,14 @@ export default function HomePage() {
       <section className="border-t border-white/5 px-6 py-20">
         <div className="mx-auto max-w-6xl">
           <div className="mx-auto max-w-2xl text-center">
-            <span className="text-xs font-medium uppercase tracking-widest text-brand-light">Sound familiar?</span>
+            <span className="text-xs font-medium uppercase tracking-widest text-brand-light">Where it gets tricky</span>
             <h2 className="mt-3 text-3xl font-bold text-white sm:text-4xl">
-              Prompting an AI builder is a slow way to lose money
+              AI is great at generating pages. Architecture is still a human call.
             </h2>
             <p className="mt-3 text-white/50">
-              Every fix is another prompt. Every prompt costs tokens &mdash;
-              whether it works or not.
+              Structure, hosting, security, how the pieces fit together &mdash;
+              a good developer decides those up front. Skip them and a small
+              request turns into another round of fixes.
             </p>
           </div>
 

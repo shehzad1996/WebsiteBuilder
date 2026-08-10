@@ -79,7 +79,7 @@ export default function ComparisonReel() {
         }`}
       >
         <div className="flex items-center justify-between">
-          <h3 className="text-base font-semibold text-white">Building it yourself, with AI</h3>
+          <h3 className="text-base font-semibold text-white">AI alone, no architecture plan</h3>
           <span className="rounded-full border border-red-500/30 bg-red-500/10 px-2.5 py-1 text-[11px] font-medium text-red-300">
             Still not done
           </span>
