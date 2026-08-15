@@ -28,6 +28,12 @@ and they only pay once they see the real thing.
   a real, role-gated login (no more `?key=` in the URL) for your team to
   see every submitted inquiry, paste in the real build URL once it's
   ready, and email the customer the link in one click.
+- **WhatsApp + AI chat widget** (`components/ChatWidget.tsx`,
+  `app/api/chat/route.ts`) — floating on every page. A WhatsApp button
+  gives visitors instant human contact; the chat panel next to it answers
+  questions itself using `docs/website-knowledge.md`, and hands off to
+  the same WhatsApp number (with the visitor's last question pre-filled)
+  the moment they want a person.
 
 ## Getting started
 
@@ -87,6 +93,32 @@ Two things are optional on top of that:
   added it under **Settings → Domains**, set
   `NEXT_PUBLIC_PREVIEW_DOMAIN=yourdomain.com`. `middleware.ts` already
   has the rewrite logic — it just does nothing until this is set.
+
+### WhatsApp + AI chat widget
+
+A floating widget sits in the bottom-right corner on every page — a green
+WhatsApp button for instant human contact, next to a chat bubble that opens
+an AI assistant.
+
+- **WhatsApp button.** Set `NEXT_PUBLIC_WHATSAPP_NUMBER` to your number,
+  digits only with country code (e.g. `15551234567`, no `+`, no spaces).
+  Without it, the button still renders but opens a placeholder number —
+  set this before going live. It's a plain [click-to-chat
+  link](https://faq.whatsapp.com/425247423114725) (`wa.me/<number>`), no
+  WhatsApp Business API or app install needed on your end.
+- **AI chatbot.** Answers visitor questions using **only**
+  `docs/website-knowledge.md` as its source of truth — edit that file to
+  change what it knows or how it talks; no code changes needed. It calls
+  the Claude API directly (`app/api/chat/route.ts`), so set
+  `ANTHROPIC_API_KEY` (get one at
+  [console.anthropic.com](https://console.anthropic.com)). Without it, the
+  chat panel shows an error and points visitors at the WhatsApp button
+  instead — the site still works either way.
+- **Handoff to WhatsApp.** The chat panel always shows a "Chat with a
+  human on WhatsApp" button. Once the visitor has asked something, that
+  link pre-fills the WhatsApp message with their last question, so
+  whoever picks it up on WhatsApp can see what was already asked and the
+  conversation continues there — no separate system to check.
 
 ## Storage
 
