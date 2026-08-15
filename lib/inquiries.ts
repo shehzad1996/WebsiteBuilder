@@ -3,6 +3,7 @@ import path from "path";
 import os from "os";
 import { randomUUID } from "crypto";
 import { getSupabase } from "./supabase";
+import { buildPreviewSlug } from "./slug";
 
 export type Inquiry = {
   id: string;
@@ -18,9 +19,14 @@ export type Inquiry = {
   description: string;
   /** The submitting user's auth id, if they were signed in. */
   userId?: string;
+  /** Unguessable id used in /preview/<slug> — works with no login. */
+  slug: string;
+  /** Set once a human swaps in the real build; auto-preview shows until then. */
+  previewUrl?: string;
+  previewSentAt?: string;
 };
 
-type NewInquiry = Omit<Inquiry, "id" | "createdAt" | "status">;
+type NewInquiry = Omit<Inquiry, "id" | "createdAt" | "status" | "slug">;
 
 export function supabaseConfigured(): boolean {
   return Boolean(process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY);
@@ -42,6 +48,46 @@ export async function addInquiry(input: NewInquiry): Promise<Inquiry> {
   return supabaseConfigured() ? addToSupabase(input) : addToFile(input);
 }
 
+export async function getInquiryBySlug(slug: string): Promise<Inquiry | null> {
+  return supabaseConfigured() ? getBySlugFromSupabase(slug) : getBySlugFromFile(slug);
+}
+
+/**
+ * Admin action: attach the real preview URL (or leave it unset to keep
+ * showing the auto-generated one) and move the inquiry to "quoted".
+ * Returns the updated inquiry so the caller can email the link.
+ */
+export async function setInquiryPreview(
+  id: string,
+  previewUrl: string | null
+): Promise<Inquiry> {
+  if (supabaseConfigured()) {
+    const supabase = getSupabase();
+    const { data, error } = await supabase
+      .from("inquiries")
+      .update({
+        preview_url: previewUrl,
+        status: "quoted",
+        preview_sent_at: new Date().toISOString(),
+      })
+      .eq("id", id)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return fromRow(data as InquiryRow);
+  }
+
+  const inquiries = await readFromFile();
+  const inquiry = inquiries.find((i) => i.id === id);
+  if (!inquiry) throw new Error("Inquiry not found.");
+  inquiry.previewUrl = previewUrl ?? undefined;
+  inquiry.status = "quoted";
+  inquiry.previewSentAt = new Date().toISOString();
+  await fs.writeFile(DATA_FILE, JSON.stringify(inquiries, null, 2), "utf-8");
+  return inquiry;
+}
+
 // ---------------------------------------------------------------------
 // Supabase backend
 // ---------------------------------------------------------------------
@@ -59,6 +105,9 @@ type InquiryRow = {
   timeline: string;
   description: string;
   user_id: string | null;
+  slug: string;
+  preview_url: string | null;
+  preview_sent_at: string | null;
 };
 
 function fromRow(row: InquiryRow): Inquiry {
@@ -75,6 +124,9 @@ function fromRow(row: InquiryRow): Inquiry {
     timeline: row.timeline,
     description: row.description,
     userId: row.user_id ?? undefined,
+    slug: row.slug,
+    previewUrl: row.preview_url ?? undefined,
+    previewSentAt: row.preview_sent_at ?? undefined,
   };
 }
 
@@ -89,26 +141,48 @@ async function readFromSupabase(): Promise<Inquiry[]> {
   return (data as InquiryRow[]).map(fromRow);
 }
 
-async function addToSupabase(input: NewInquiry): Promise<Inquiry> {
+async function getBySlugFromSupabase(slug: string): Promise<Inquiry | null> {
   const supabase = getSupabase();
   const { data, error } = await supabase
     .from("inquiries")
-    .insert({
-      name: input.name,
-      email: input.email,
-      phone: input.phone ?? null,
-      project_name: input.projectName ?? null,
-      project_type: input.projectType,
-      budget: input.budget,
-      timeline: input.timeline,
-      description: input.description,
-      user_id: input.userId ?? null,
-    })
-    .select()
-    .single();
+    .select("*")
+    .eq("slug", slug)
+    .maybeSingle();
 
   if (error) throw error;
-  return fromRow(data as InquiryRow);
+  return data ? fromRow(data as InquiryRow) : null;
+}
+
+async function addToSupabase(input: NewInquiry): Promise<Inquiry> {
+  const supabase = getSupabase();
+
+  // Slugs are random enough that a collision is very unlikely, but the
+  // column is unique — retry with a fresh slug rather than fail the
+  // submission on the rare clash.
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const slug = buildPreviewSlug(input);
+    const { data, error } = await supabase
+      .from("inquiries")
+      .insert({
+        name: input.name,
+        email: input.email,
+        phone: input.phone ?? null,
+        project_name: input.projectName ?? null,
+        project_type: input.projectType,
+        budget: input.budget,
+        timeline: input.timeline,
+        description: input.description,
+        user_id: input.userId ?? null,
+        slug,
+      })
+      .select()
+      .single();
+
+    if (!error) return fromRow(data as InquiryRow);
+    if (error.code !== "23505" /* unique_violation */) throw error;
+  }
+
+  throw new Error("Could not generate a unique preview link. Please try again.");
 }
 
 // ---------------------------------------------------------------------
@@ -137,12 +211,18 @@ async function readFromFile(): Promise<Inquiry[]> {
   }
 }
 
+async function getBySlugFromFile(slug: string): Promise<Inquiry | null> {
+  const inquiries = await readFromFile();
+  return inquiries.find((i) => i.slug === slug) ?? null;
+}
+
 async function addToFile(input: NewInquiry): Promise<Inquiry> {
   const inquiries = await readFromFile();
   const inquiry: Inquiry = {
     id: randomUUID(),
     createdAt: new Date().toISOString(),
     status: "new",
+    slug: buildPreviewSlug(input),
     ...input,
   };
   inquiries.unshift(inquiry);

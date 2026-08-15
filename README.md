@@ -12,14 +12,22 @@ and they only pay once they see the real thing.
   ($50 starter through $1,000–$5,000 custom), testimonials, and the
   how-it-works flow.
 - **Inquiry form** (`app/inquiry/page.tsx` + `app/api/inquiry/route.ts`) —
-  a free-text description plus project type, budget, and timeline, and
-  stores each submission (tagged to the signed-in user, if any).
+  a free-text description plus project type, budget, and timeline. No
+  account required — only an email address, tagged to the signed-in user
+  if there is one. Every submission gets a random `slug` and a preview
+  link immediately.
+- **Auto preview page** (`app/preview/[slug]/page.tsx`) — a public,
+  no-login page built from the visitor's own brief (name, description,
+  budget, timeline). It's what the emailed link opens to. Once an admin
+  attaches a real build URL, the same link redirects there instead — the
+  visitor never needs a new link.
 - **Customer login** (`app/login`, `app/signup`, `app/account`) — visitors
-  can create an account and see the status of the inquiries they've
-  submitted at `/account`.
+  can *optionally* create an account to see all their inquiries and
+  preview links from `/account` instead of hunting down the email.
 - **Admin login + dashboard** (`app/admin/login`, `app/admin/page.tsx`) —
   a real, role-gated login (no more `?key=` in the URL) for your team to
-  see every submitted inquiry.
+  see every submitted inquiry, paste in the real build URL once it's
+  ready, and email the customer the link in one click.
 
 ## Getting started
 
@@ -41,6 +49,8 @@ keep accounts), so set one up when you're ready:
    - `supabase/migrations/0002_auth_and_profiles.sql` — adds the `profiles`
      table, links inquiries to the submitting user, and sets up RLS so
      users only ever see their own inquiries while admins see everything.
+   - `supabase/migrations/0003_preview_links.sql` — adds the `slug` /
+     `preview_url` columns that back `/preview/<slug>`.
 3. In **Settings → API**, copy the **Project URL**, the **anon public**
    key, and the **service_role** key.
 4. Set all four in `.env.local` (or your Vercel project's Environment
@@ -54,6 +64,29 @@ keep accounts), so set one up when you're ready:
    ```sql
    update profiles set role = 'admin' where email = 'someone@example.com';
    ```
+
+### Preview links & email
+
+`/preview/<slug>` works with zero setup — it's just a page that reads
+straight from Postgres (or the temp-file store), so every inquiry gets a
+working link the second it's submitted.
+
+Two things are optional on top of that:
+
+- **Emailing the link automatically.** Create a free account at
+  [resend.com](https://resend.com), grab an API key from **API Keys**,
+  and set `RESEND_API_KEY` (and `RESEND_FROM_EMAIL`, once you've
+  [verified a sending domain](https://resend.com/docs/dashboard/domains/introduction) —
+  until then it sends from Resend's shared `onboarding@resend.dev`,
+  which is fine for testing but looks unprofessional to real customers).
+  Without this set, `/admin` still generates and shows the link — you'd
+  just copy-paste it to the customer yourself.
+- **True subdomains** (`slug.yourdomain.com` instead of
+  `yourdomain.com/preview/slug`). Once you've registered a domain,
+  pointed wildcard DNS (`*.yourdomain.com`) at this Vercel project, and
+  added it under **Settings → Domains**, set
+  `NEXT_PUBLIC_PREVIEW_DOMAIN=yourdomain.com`. `middleware.ts` already
+  has the rewrite logic — it just does nothing until this is set.
 
 ## Storage
 
@@ -78,15 +111,14 @@ all of them.
 
 This is a first working version of the platform. Suggested next steps:
 
-- **Email notifications** — notify your team and the customer on
-  submission (e.g. via Resend). Hook point is marked with a `TODO` in
-  `app/api/inquiry/route.ts`.
-- **Quoting workflow** — a way for your team to turn an inquiry into a
-  quote plus a live preview link the customer can review.
-- **Payments** — Stripe (or similar) once a customer approves their quote.
+- **New-inquiry notifications** — ping your team (email/Slack) the moment
+  someone submits, instead of relying on checking `/admin`. Hook point is
+  marked with a `TODO` in `app/api/inquiry/route.ts`.
+- **Payments** — Stripe (or similar) once a customer approves their preview.
 - **Retroactive linking** — inquiries submitted anonymously before a
   visitor creates an account aren't linked to it automatically; only
-  inquiries submitted while signed in show up on `/account`.
+  inquiries submitted while signed in show up on `/account` (guests can
+  still always reach theirs via the `/preview/<slug>` link).
 
 ## Rebranding
 

@@ -2,11 +2,24 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 /**
- * Refreshes the Supabase auth session on every request so server
- * components always see an up-to-date, non-expired session. Standard
- * pattern for @supabase/ssr in the Next.js App Router.
+ * Refreshes the Supabase auth session on every request, and — once a real
+ * domain is set (NEXT_PUBLIC_PREVIEW_DOMAIN) — rewrites
+ * `<slug>.yourdomain.com` to `/preview/<slug>` so preview links can be true
+ * subdomains instead of a path. Until then, buildPreviewLink() (lib/slug.ts)
+ * hands out path-based links on the current deployment domain, and this
+ * rewrite simply never matches.
  */
 export async function middleware(request: NextRequest) {
+  const previewDomain = process.env.NEXT_PUBLIC_PREVIEW_DOMAIN;
+  const host = request.headers.get("host") ?? "";
+
+  if (previewDomain && host !== previewDomain && host.endsWith(`.${previewDomain}`)) {
+    const slug = host.slice(0, -(previewDomain.length + 1));
+    const url = request.nextUrl.clone();
+    url.pathname = `/preview/${slug}`;
+    return NextResponse.rewrite(url);
+  }
+
   let response = NextResponse.next({ request });
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;

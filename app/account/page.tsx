@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { buildPreviewLink } from "@/lib/slug";
 
 export default async function AccountPage() {
   let supabase;
@@ -72,9 +73,19 @@ export default async function AccountPage() {
                 </span>
               </div>
               <p className="mt-2 text-sm text-white/50">{inquiry.description}</p>
-              <p className="mt-3 text-xs text-white/30">
-                Submitted {new Date(inquiry.created_at).toLocaleString()}
-              </p>
+              <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
+                <p className="text-xs text-white/30">
+                  Submitted {new Date(inquiry.created_at).toLocaleString()}
+                </p>
+                <a
+                  href={inquiry.preview_url || buildPreviewLink(inquiry.slug)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-full border border-white/15 px-3 py-1.5 text-xs font-semibold text-white/80 hover:border-white/30"
+                >
+                  View preview ↗
+                </a>
+              </div>
             </div>
           ))}
         </div>

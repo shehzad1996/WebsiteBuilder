@@ -1,5 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { buildPreviewLink } from "@/lib/slug";
+import AdminPreviewActions from "@/components/AdminPreviewActions";
 
 export default async function AdminPage() {
   let supabase;
@@ -89,12 +91,13 @@ export default async function AdminPage() {
               <th className="px-4 py-3">Budget</th>
               <th className="px-4 py-3">Description</th>
               <th className="px-4 py-3">Status</th>
+              <th className="px-4 py-3">Preview</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-night-border bg-night">
             {(!inquiries || inquiries.length === 0) && (
               <tr>
-                <td colSpan={7} className="px-4 py-8 text-center text-white/30">
+                <td colSpan={8} className="px-4 py-8 text-center text-white/30">
                   No inquiries yet.
                 </td>
               </tr>
@@ -122,6 +125,13 @@ export default async function AdminPage() {
                   <span className="rounded-full bg-night-alt px-2 py-1 text-xs font-medium text-white/60">
                     {inquiry.status}
                   </span>
+                </td>
+                <td className="min-w-[220px] px-4 py-3">
+                  <AdminPreviewActions
+                    inquiryId={inquiry.id}
+                    autoPreviewUrl={buildPreviewLink(inquiry.slug)}
+                    savedPreviewUrl={inquiry.preview_url ?? undefined}
+                  />
                 </td>
               </tr>
             ))}

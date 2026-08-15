@@ -24,6 +24,7 @@ const TIMELINES = ["ASAP", "Within 2 weeks", "Within a month", "No rush"];
 export default function InquiryPage() {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -52,11 +53,13 @@ export default function InquiryPage() {
         body: JSON.stringify(payload),
       });
 
+      const data = await res.json().catch(() => ({}));
+
       if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
         throw new Error(data.error ?? "Something went wrong. Please try again.");
       }
 
+      setPreviewUrl(data.previewUrl ?? null);
       setSubmitted(true);
       form.reset();
     } catch (err) {
@@ -72,12 +75,34 @@ export default function InquiryPage() {
         <h1 className="text-3xl font-bold text-white">Thanks, we&apos;ve got it!</h1>
         <p className="mt-4 text-white/55">
           A developer will pick this up and start putting your free preview
-          together. We&apos;ll reach out by email with a working site and
-          your quote. You don&apos;t pay anything until you&apos;ve seen it
-          and you&apos;re happy.
+          together. We&apos;ll email you the link the moment it&apos;s ready.
+          You don&apos;t pay anything until you&apos;ve seen it and you&apos;re
+          happy.
         </p>
+
+        {previewUrl && (
+          <div className="mt-8 rounded-xl border border-white/10 bg-night-soft/50 p-5 text-left">
+            <p className="text-xs font-medium uppercase tracking-widest text-brand-light">
+              Your link — bookmark it
+            </p>
+            <p className="mt-2 text-sm text-white/60">
+              This link is yours whether or not you make an account. It shows what
+              you told us right now, and turns into your real site automatically
+              once a developer publishes it.
+            </p>
+            <a
+              href={previewUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-3 block truncate rounded-lg border border-white/10 bg-night px-3 py-2 text-sm text-brand-light hover:underline"
+            >
+              {previewUrl}
+            </a>
+          </div>
+        )}
+
         <p className="mt-6 text-sm text-white/40">
-          Want to track it online?{" "}
+          Want to track it from an account instead?{" "}
           <Link href="/signup" className="text-brand-light hover:underline">
             Create an account
           </Link>
@@ -93,6 +118,10 @@ export default function InquiryPage() {
         Describe it in your own words &mdash; that&apos;s the main thing we
         need. A real developer reads it and builds it. No payment, no
         commitment, you only decide once you&apos;ve seen it.
+      </p>
+      <p className="mt-2 text-sm text-white/35">
+        No account needed &mdash; just an email address, so we can send you the
+        link to review it.
       </p>
 
       <form onSubmit={handleSubmit} className="mt-10 space-y-6">
