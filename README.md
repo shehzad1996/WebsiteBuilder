@@ -1,4 +1,4 @@
-# Webdevelopers — Website Builder Inquiry Platform
+# Websitedevelopers — Website Builder Inquiry Platform
 
 > Website builder prices. Human-built quality.
 
