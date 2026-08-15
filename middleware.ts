@@ -9,15 +9,24 @@ import { NextResponse, type NextRequest } from "next/server";
  * hands out path-based links on the current deployment domain, and this
  * rewrite simply never matches.
  */
+// Subdomains that belong to the main site itself, never to a customer's
+// preview slug. Without this, "www.<domain>" (which Vercel points at the
+// same production deployment as the apex domain) gets misread as a
+// preview link for a slug literally named "www" and 404s the whole
+// homepage — that's the bug this list exists to prevent.
+const RESERVED_SUBDOMAINS = new Set(["www"]);
+
 export async function middleware(request: NextRequest) {
   const previewDomain = process.env.NEXT_PUBLIC_PREVIEW_DOMAIN;
   const host = request.headers.get("host") ?? "";
 
   if (previewDomain && host !== previewDomain && host.endsWith(`.${previewDomain}`)) {
     const slug = host.slice(0, -(previewDomain.length + 1));
-    const url = request.nextUrl.clone();
-    url.pathname = `/preview/${slug}`;
-    return NextResponse.rewrite(url);
+    if (!RESERVED_SUBDOMAINS.has(slug)) {
+      const url = request.nextUrl.clone();
+      url.pathname = `/preview/${slug}`;
+      return NextResponse.rewrite(url);
+    }
   }
 
   let response = NextResponse.next({ request });
