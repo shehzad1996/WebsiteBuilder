@@ -1,4 +1,4 @@
-# PixelHuman — Website Builder Inquiry Platform
+# Webdevelopers — Website Builder Inquiry Platform
 
 > Website builder prices. Human-built quality.
 

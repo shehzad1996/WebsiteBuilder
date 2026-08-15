@@ -190,7 +190,7 @@ async function addToSupabase(input: NewInquiry): Promise<Inquiry> {
 // ---------------------------------------------------------------------
 
 const DATA_DIR = process.env.INQUIRIES_DIR ?? os.tmpdir();
-const DATA_FILE = path.join(DATA_DIR, "pixelhuman-inquiries.json");
+const DATA_FILE = path.join(DATA_DIR, "webdevelopers-inquiries.json");
 
 async function ensureStore() {
   await fs.mkdir(DATA_DIR, { recursive: true });

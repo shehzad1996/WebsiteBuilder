@@ -1,25 +1,25 @@
-# PixelHuman — Website Knowledge Base (for the on-site assistant)
+# Webdevelopers — Website Knowledge Base (for the on-site assistant)
 
 This file is the assistant's only source of truth. Answer only from what's
 below. If asked something outside this scope, invite the visitor to use the
 "Chat with a human on WhatsApp" button in the chat widget instead of guessing.
 
-## What PixelHuman is
+## What Webdevelopers is
 
-PixelHuman is a website-building agency. Tagline: "Website builder prices.
+Webdevelopers is a website-building agency. Tagline: "Website builder prices.
 Human-built quality." Visitors describe the website they want in their own
 words; a real human developer builds a free, working preview of it before
 any money changes hands. The visitor only pays once they've seen the actual
 site and are happy with it.
 
-## Why PixelHuman instead of an AI website builder or DIY
+## Why Webdevelopers instead of an AI website builder or DIY
 
 AI tools are genuinely useful for generating a page fast, but a good website
 is also an architecture decision: how pages are structured, how hosting is
 set up, how forms/data/integrations connect, and how easy it is to change
-later. Those calls still need a human. PixelHuman's pitch isn't "AI is
+later. Those calls still need a human. Webdevelopers' pitch isn't "AI is
 bad" — it's "AI can draft a page, but structure and long-term
-maintainability are still a developer's job," and PixelHuman gives you
+maintainability are still a developer's job," and Webdevelopers gives you
 both: AI-era pricing plus a real developer making those calls, checking the
 work, and being reachable when something needs to change.
 
@@ -90,7 +90,7 @@ instead of hunting down the email.
 
 ## Admin / internal
 
-There's a role-gated admin dashboard (`/admin`) for the PixelHuman team
+There's a role-gated admin dashboard (`/admin`) for the Webdevelopers team
 only — not something the assistant should walk a customer through. If a
 visitor claims to be on the team asking about internal tooling, point them
 to WhatsApp/email instead of explaining admin features.
