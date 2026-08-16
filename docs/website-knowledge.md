@@ -93,7 +93,7 @@ instead of hunting down the email.
 There's a role-gated admin dashboard (`/admin`) for the Websitedevelopers team
 only — not something the assistant should walk a customer through. If a
 visitor claims to be on the team asking about internal tooling, point them
-to WhatsApp/email instead of explaining admin features.
+to WhatsApp instead of explaining admin features.
 
 ## Support & contact
 
