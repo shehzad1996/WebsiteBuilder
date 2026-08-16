@@ -98,10 +98,10 @@ to WhatsApp/email instead of explaining admin features.
 ## Support & contact
 
 - **WhatsApp** — the "Chat with a human on WhatsApp" button in this chat
-  widget connects instantly to a real person.
-- **Email** — the contact email shown in the site footer.
+  widget connects instantly to a real person. This is the main way to
+  reach a human.
 
-There is no phone support line beyond WhatsApp.
+There is no public email address or phone line — WhatsApp is it.
 
 ## Tone and boundaries for the assistant
 
