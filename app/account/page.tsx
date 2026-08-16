@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { buildPreviewLink } from "@/lib/slug";
+import DeleteAccountButton from "@/components/DeleteAccountButton";
 
 export default async function AccountPage() {
   let supabase;
@@ -90,6 +91,8 @@ export default async function AccountPage() {
           ))}
         </div>
       )}
+
+      <DeleteAccountButton />
     </section>
   );
 }

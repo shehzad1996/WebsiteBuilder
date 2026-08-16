@@ -8,12 +8,14 @@ export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [showLoginHint, setShowLoginHint] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [sent, setSent] = useState(false);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(null);
+    setShowLoginHint(false);
     setSubmitting(true);
 
     const supabase = createClient();
@@ -25,12 +27,35 @@ export default function SignupPage() {
       },
     });
 
-    setSubmitting(false);
-
     if (error) {
+      setSubmitting(false);
       setError(error.message);
       return;
     }
+
+    // Supabase signals "this email already has an account" by returning a
+    // user with an empty identities array rather than an error (keeps
+    // whether an email is registered private). When that happens, try
+    // logging the visitor straight in with what they just typed — if it
+    // really is their account, they land in it immediately instead of
+    // hitting a dead end.
+    const alreadyRegistered = (data.user?.identities?.length ?? 1) === 0;
+
+    if (alreadyRegistered) {
+      const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+      setSubmitting(false);
+
+      if (signInError) {
+        setError("That email already has an account, and this password doesn't match it.");
+        setShowLoginHint(true);
+        return;
+      }
+
+      window.location.href = "/account";
+      return;
+    }
+
+    setSubmitting(false);
 
     // Email confirmations off on the project → Supabase returns an
     // active session immediately, nothing to wait for.
@@ -84,7 +109,20 @@ export default function SignupPage() {
           />
         </label>
 
-        {error && <p className="text-sm text-red-400">{error}</p>}
+        {error && (
+          <p className="text-sm text-red-400">
+            {error}
+            {showLoginHint && (
+              <>
+                {" "}
+                <Link href="/login" className="underline hover:text-red-300">
+                  Log in instead
+                </Link>
+                .
+              </>
+            )}
+          </p>
+        )}
 
         <button
           type="submit"
