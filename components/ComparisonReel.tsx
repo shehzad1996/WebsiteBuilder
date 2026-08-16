@@ -3,10 +3,10 @@
 import { useEffect, useState } from "react";
 
 const PAIN_ATTEMPTS = [
-  { prompt: "“Make it look more professional”", cost: 0.4 },
-  { prompt: "“The layout broke on mobile”", cost: 0.65 },
-  { prompt: "“Now the contact form doesn’t work”", cost: 0.55 },
-  { prompt: "“Try again, from scratch”", cost: 1.85 },
+  { prompt: "“Make it look more professional”", cost: 3.2 },
+  { prompt: "“The layout broke on mobile”", cost: 5.1 },
+  { prompt: "“Now the contact form doesn’t work”", cost: 4.25 },
+  { prompt: "“Try again, from scratch”", cost: 14.95 },
 ];
 
 const SOLUTION_STEPS = [
@@ -64,7 +64,7 @@ export default function ComparisonReel() {
     };
   }, []);
 
-  const PAIN_TOTAL_DISPLAY = "$14.85+"; // shown attempts + the ones that happened off-screen
+  const PAIN_TOTAL_DISPLAY = "£69.50+"; // shown attempts + the ones that happened off-screen
   const painDone = visiblePain === PAIN_ATTEMPTS.length;
   const solutionDone = visibleSolution === SOLUTION_STEPS.length;
 
@@ -100,7 +100,7 @@ export default function ComparisonReel() {
                 </svg>
                 {attempt.prompt}
               </span>
-              <span className="shrink-0 text-red-300/80">${attempt.cost.toFixed(2)}</span>
+              <span className="shrink-0 text-red-300/80">£{attempt.cost.toFixed(2)}</span>
             </div>
           ))}
           <div
@@ -114,7 +114,7 @@ export default function ComparisonReel() {
 
         <div className="mt-4 flex items-center justify-between border-t border-white/10 pt-4">
           <span className="text-sm text-white/40">Total spent</span>
-          <span className="font-bold text-red-300">{painDone ? PAIN_TOTAL_DISPLAY : "$0.00"}</span>
+          <span className="font-bold text-red-300">{painDone ? PAIN_TOTAL_DISPLAY : "£0.00"}</span>
         </div>
         <p className={`mt-2 text-sm text-red-300/80 transition-opacity duration-500 ${painDone ? "opacity-100" : "opacity-0"}`}>
           Result: still broken, or still not right.
@@ -150,7 +150,7 @@ export default function ComparisonReel() {
                 </span>
                 {step}
               </span>
-              <span className="shrink-0 text-brand-light">$0</span>
+              <span className="shrink-0 text-brand-light">£0</span>
             </div>
           ))}
         </div>
@@ -158,7 +158,7 @@ export default function ComparisonReel() {
         <div className="mt-4 flex items-center justify-between border-t border-white/10 pt-4">
           <span className="text-sm text-white/40">Total spent</span>
           <span className="font-bold text-brand-light">
-            {solutionDone ? "$0 until you like it" : "$0"}
+            {solutionDone ? "£0 until you like it" : "£0"}
           </span>
         </div>
         <p className={`mt-2 text-sm text-white/60 transition-opacity duration-500 ${solutionDone ? "opacity-100" : "opacity-0"}`}>

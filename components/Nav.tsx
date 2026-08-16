@@ -25,10 +25,15 @@ export default async function Nav() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/5 bg-night/70 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <Link href="/" className="flex items-center gap-2 text-[15px] font-semibold text-white">
-          <span className="flex h-6 w-6 items-center justify-center rounded-md bg-brand text-xs font-bold">P</span>
-          {BRAND.name}
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-4 py-3 sm:gap-4 sm:px-6 sm:py-4">
+        <Link
+          href="/"
+          className="flex min-w-0 items-center gap-1.5 text-sm font-semibold text-white sm:gap-2 sm:text-[15px]"
+        >
+          <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-brand text-[10px] font-bold sm:h-6 sm:w-6 sm:text-xs">
+            W
+          </span>
+          <span className="truncate">{BRAND.name}</span>
         </Link>
         <nav className="hidden items-center gap-8 text-sm text-white/50 sm:flex">
           <Link href="/#how-it-works" className="hover:text-white">
@@ -46,12 +51,12 @@ export default async function Nav() {
             </Link>
           )}
         </nav>
-        <div className="flex items-center gap-3">
+        <div className="flex shrink-0 items-center gap-1.5 sm:gap-3">
           {profile ? (
             <form action="/auth/signout" method="POST">
               <button
                 type="submit"
-                className="rounded-full border border-white/15 px-4 py-2 text-sm font-semibold text-white/70 transition hover:border-white/30"
+                className="whitespace-nowrap rounded-full border border-white/15 px-2.5 py-1.5 text-xs font-semibold text-white/70 transition hover:border-white/30 sm:px-4 sm:py-2 sm:text-sm"
               >
                 Sign out
               </button>
@@ -59,16 +64,17 @@ export default async function Nav() {
           ) : (
             <Link
               href="/login"
-              className="rounded-full border border-white/15 px-4 py-2 text-sm font-semibold text-white/70 transition hover:border-white/30"
+              className="whitespace-nowrap rounded-full border border-white/15 px-2.5 py-1.5 text-xs font-semibold text-white/70 transition hover:border-white/30 sm:px-4 sm:py-2 sm:text-sm"
             >
               Log in
             </Link>
           )}
           <Link
             href="/inquiry"
-            className="rounded-full bg-white px-5 py-2 text-sm font-semibold text-night transition hover:bg-white/90"
+            className="whitespace-nowrap rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-night transition hover:bg-white/90 sm:px-5 sm:py-2 sm:text-sm"
           >
-            Get a free quote
+            <span className="sm:hidden">Free quote</span>
+            <span className="hidden sm:inline">Get a free quote</span>
           </Link>
         </div>
       </div>
