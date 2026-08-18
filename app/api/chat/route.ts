@@ -27,7 +27,7 @@ function isChatMessage(value: unknown): value is ChatMessage {
 }
 
 export async function POST(req: NextRequest) {
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const apiKey = process.env.OPENROUTER_API_KEY;
   if (!apiKey) {
     return NextResponse.json(
       {
@@ -58,24 +58,30 @@ ${knowledge}
 ---`;
 
   try {
-    const res = await fetch("https://api.anthropic.com/v1/messages", {
+    // OpenRouter speaks the OpenAI chat-completions format: system prompt is
+    // just the first message in the array, not a separate top-level field.
+    const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
       headers: {
-        "x-api-key": apiKey,
-        "anthropic-version": "2023-06-01",
-        "content-type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+        // Optional but recommended by OpenRouter for attribution/rankings.
+        "HTTP-Referer": "https://websitedevelopers.online",
+        "X-Title": BRAND.name,
       },
       body: JSON.stringify({
-        model: process.env.ANTHROPIC_MODEL || "claude-haiku-4-5-20251001",
+        model: process.env.OPENROUTER_MODEL || "anthropic/claude-3.5-haiku",
         max_tokens: 400,
-        system: systemPrompt,
-        messages: trimmed.map((m) => ({ role: m.role, content: m.content })),
+        messages: [
+          { role: "system", content: systemPrompt },
+          ...trimmed.map((m) => ({ role: m.role, content: m.content })),
+        ],
       }),
     });
 
     if (!res.ok) {
       const detail = await res.text().catch(() => "");
-      console.error("Anthropic chat request failed", res.status, detail);
+      console.error("OpenRouter chat request failed", res.status, detail);
       return NextResponse.json(
         {
           error:
@@ -87,8 +93,7 @@ ${knowledge}
 
     const data = await res.json();
     const reply: string =
-      data?.content?.find((block: { type: string }) => block.type === "text")
-        ?.text ??
+      data?.choices?.[0]?.message?.content ??
       "Sorry, I couldn't put together an answer to that — try WhatsApp and a person will help.";
 
     return NextResponse.json({ reply });
