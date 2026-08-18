@@ -109,11 +109,14 @@ an AI assistant.
 - **AI chatbot.** Answers visitor questions using **only**
   `docs/website-knowledge.md` as its source of truth — edit that file to
   change what it knows or how it talks; no code changes needed. It calls
-  the Claude API directly (`app/api/chat/route.ts`), so set
-  `ANTHROPIC_API_KEY` (get one at
-  [console.anthropic.com](https://console.anthropic.com)). Without it, the
-  chat panel shows an error and points visitors at the WhatsApp button
-  instead — the site still works either way.
+  the model through [OpenRouter](https://openrouter.ai) (`app/api/chat/route.ts`),
+  so set `OPENROUTER_API_KEY` (get one at
+  [openrouter.ai/keys](https://openrouter.ai/keys)). Optionally set
+  `OPENROUTER_MODEL` to any model id listed at
+  [openrouter.ai/models](https://openrouter.ai/models) — defaults to a
+  small, inexpensive Claude model. Without a key, the chat panel shows an
+  error and points visitors at the WhatsApp button instead — the site
+  still works either way.
 - **Handoff to WhatsApp.** The chat panel always shows a "Chat with a
   human on WhatsApp" button. Once the visitor has asked something, that
   link pre-fills the WhatsApp message with their last question, so
