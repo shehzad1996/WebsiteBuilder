@@ -70,7 +70,7 @@ ${knowledge}
         "X-Title": BRAND.name,
       },
       body: JSON.stringify({
-        model: process.env.OPENROUTER_MODEL || "anthropic/claude-3.5-haiku",
+        model: process.env.OPENROUTER_MODEL || "z-ai/glm-5.2:free",
         max_tokens: 400,
         messages: [
           { role: "system", content: systemPrompt },
