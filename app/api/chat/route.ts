@@ -60,24 +60,48 @@ ${knowledge}
   try {
     // OpenRouter speaks the OpenAI chat-completions format: system prompt is
     // just the first message in the array, not a separate top-level field.
-    const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-        // Optional but recommended by OpenRouter for attribution/rankings.
-        "HTTP-Referer": "https://websitedevelopers.online",
-        "X-Title": BRAND.name,
-      },
-      body: JSON.stringify({
-        model: process.env.OPENROUTER_MODEL || "z-ai/glm-5.2:free",
-        max_tokens: 400,
-        messages: [
-          { role: "system", content: systemPrompt },
-          ...trimmed.map((m) => ({ role: m.role, content: m.content })),
-        ],
-      }),
+    const requestBody = JSON.stringify({
+      model: process.env.OPENROUTER_MODEL || "z-ai/glm-5.2:free",
+      max_tokens: 400,
+      messages: [
+        { role: "system", content: systemPrompt },
+        ...trimmed.map((m) => ({ role: m.role, content: m.content })),
+      ],
     });
+    const requestHeaders = {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+      // Optional but recommended by OpenRouter for attribution/rankings.
+      "HTTP-Referer": "https://websitedevelopers.online",
+      "X-Title": BRAND.name,
+    };
+
+    let res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
+      headers: requestHeaders,
+      body: requestBody,
+    });
+
+    // Free-tier models share a rate-limited pool upstream and can 429 under
+    // load. OpenRouter tells us how long to wait — retry once rather than
+    // failing a visitor's message over a transient limit.
+    if (res.status === 429) {
+      const detail = await res.text().catch(() => "");
+      let retryAfterSeconds = 2;
+      try {
+        retryAfterSeconds = JSON.parse(detail)?.error?.metadata?.retry_after_seconds ?? 2;
+      } catch {
+        // Use the default above.
+      }
+      console.error("OpenRouter rate-limited, retrying", retryAfterSeconds, detail);
+      await new Promise((resolve) => setTimeout(resolve, Math.min(retryAfterSeconds, 5) * 1000));
+
+      res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        method: "POST",
+        headers: requestHeaders,
+        body: requestBody,
+      });
+    }
 
     if (!res.ok) {
       const detail = await res.text().catch(() => "");
