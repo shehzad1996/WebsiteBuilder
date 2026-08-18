@@ -131,25 +131,13 @@ export default function ChatWidget() {
         </div>
       )}
 
-      <div className="flex items-center gap-2.5">
-        <a
-          href={buildWhatsAppLink()}
-          target="_blank"
-          rel="noreferrer"
-          aria-label="Chat with a human on WhatsApp"
-          title="Chat with a human on WhatsApp"
-          className="flex h-12 w-12 items-center justify-center rounded-full bg-[#25D366] text-night shadow-xl transition hover:brightness-105"
-        >
-          <WhatsAppIcon className="h-6 w-6" />
-        </a>
-        <button
-          onClick={() => setOpen((v) => !v)}
-          aria-label={open ? "Close chat" : "Open chat"}
-          className="flex h-12 w-12 items-center justify-center rounded-full bg-brand text-lg text-white shadow-xl transition hover:brightness-110"
-        >
-          {open ? "✕" : "💬"}
-        </button>
-      </div>
+      <button
+        onClick={() => setOpen((v) => !v)}
+        aria-label={open ? "Close chat" : "Open chat"}
+        className="flex h-12 w-12 items-center justify-center rounded-full bg-brand text-lg text-white shadow-xl transition hover:brightness-110"
+      >
+        {open ? "✕" : "💬"}
+      </button>
     </div>
   );
 }
