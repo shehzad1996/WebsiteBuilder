@@ -57,78 +57,74 @@ export async function POST(req: NextRequest) {
 ${knowledge}
 ---`;
 
-  try {
-    // OpenRouter speaks the OpenAI chat-completions format: system prompt is
-    // just the first message in the array, not a separate top-level field.
-    const requestBody = JSON.stringify({
-      model: process.env.OPENROUTER_MODEL || "z-ai/glm-5.2:free",
-      max_tokens: 400,
-      messages: [
-        { role: "system", content: systemPrompt },
-        ...trimmed.map((m) => ({ role: m.role, content: m.content })),
-      ],
-    });
-    const requestHeaders = {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-      // Optional but recommended by OpenRouter for attribution/rankings.
-      "HTTP-Referer": "https://websitedevelopers.online",
-      "X-Title": BRAND.name,
-    };
+  // Free OpenRouter models share a rate-limited pool upstream and 429
+  // unpredictably. Rather than depend on one model, try a short list of
+  // free general-purpose models in order and use whichever answers first.
+  // An env override always goes first; duplicates are dropped.
+  const candidateModels = Array.from(
+    new Set(
+      [
+        process.env.OPENROUTER_MODEL,
+        "z-ai/glm-5.2:free",
+        "nvidia/nemotron-3-super:free",
+        "nvidia/nemotron-3.5-lightning:free",
+        "google/gemma-4-26b-a4b:free",
+        "nvidia/nemotron-nano-9b-v2:free",
+        "nvidia/nemotron-3-nano-30b-a3b:free",
+      ].filter((m): m is string => Boolean(m))
+    )
+  );
 
-    let res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-      method: "POST",
-      headers: requestHeaders,
-      body: requestBody,
-    });
+  const requestMessages = [
+    { role: "system", content: systemPrompt },
+    ...trimmed.map((m) => ({ role: m.role, content: m.content })),
+  ];
+  const requestHeaders = {
+    Authorization: `Bearer ${apiKey}`,
+    "Content-Type": "application/json",
+    // Optional but recommended by OpenRouter for attribution/rankings.
+    "HTTP-Referer": "https://websitedevelopers.online",
+    "X-Title": BRAND.name,
+  };
 
-    // Free-tier models share a rate-limited pool upstream and can 429 under
-    // load. OpenRouter tells us how long to wait — retry once rather than
-    // failing a visitor's message over a transient limit.
-    if (res.status === 429) {
-      const detail = await res.text().catch(() => "");
-      let retryAfterSeconds = 2;
-      try {
-        retryAfterSeconds = JSON.parse(detail)?.error?.metadata?.retry_after_seconds ?? 2;
-      } catch {
-        // Use the default above.
-      }
-      console.error("OpenRouter rate-limited, retrying", retryAfterSeconds, detail);
-      await new Promise((resolve) => setTimeout(resolve, Math.min(retryAfterSeconds, 5) * 1000));
+  const attemptErrors: string[] = [];
 
-      res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+  for (const model of candidateModels) {
+    try {
+      const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
         method: "POST",
         headers: requestHeaders,
-        body: requestBody,
+        body: JSON.stringify({ model, max_tokens: 400, messages: requestMessages }),
       });
+
+      if (!res.ok) {
+        const detail = await res.text().catch(() => "");
+        attemptErrors.push(`${model}: ${res.status} ${detail}`);
+        // 401/403 means the API key itself is bad — no other model will
+        // succeed either, so stop trying instead of burning through the list.
+        if (res.status === 401 || res.status === 403) break;
+        continue;
+      }
+
+      const data = await res.json();
+      const reply: string | undefined = data?.choices?.[0]?.message?.content;
+      if (!reply) {
+        attemptErrors.push(`${model}: empty response`);
+        continue;
+      }
+
+      return NextResponse.json({ reply, model });
+    } catch (err) {
+      attemptErrors.push(`${model}: ${err instanceof Error ? err.message : String(err)}`);
     }
-
-    if (!res.ok) {
-      const detail = await res.text().catch(() => "");
-      console.error("OpenRouter chat request failed", res.status, detail);
-      return NextResponse.json(
-        {
-          error:
-            "The assistant is having trouble right now. Use the WhatsApp button instead.",
-        },
-        { status: 502 }
-      );
-    }
-
-    const data = await res.json();
-    const reply: string =
-      data?.choices?.[0]?.message?.content ??
-      "Sorry, I couldn't put together an answer to that — try WhatsApp and a person will help.";
-
-    return NextResponse.json({ reply });
-  } catch (err) {
-    console.error("Chat route error", err);
-    return NextResponse.json(
-      {
-        error:
-          "The assistant is having trouble right now. Use the WhatsApp button instead.",
-      },
-      { status: 500 }
-    );
   }
+
+  console.error("All OpenRouter chat models failed", attemptErrors.join(" | "));
+  return NextResponse.json(
+    {
+      error:
+        "The assistant is having trouble right now. Use the WhatsApp button instead.",
+    },
+    { status: 502 }
+  );
 }
