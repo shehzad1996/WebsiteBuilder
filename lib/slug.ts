@@ -26,13 +26,25 @@ export function buildPreviewSlug(input: {
 }
 
 /**
+ * The base URL of wherever this app is currently deployed
+ * (VERCEL_URL / NEXT_PUBLIC_SITE_URL, falling back to localhost). Shared by
+ * buildPreviewLink() below and anything else that needs to link back to the
+ * site from outside a request (e.g. an email notification).
+ */
+export function buildSiteUrl(): string {
+  return (
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000")
+  );
+}
+
+/**
  * The link customers actually get. Domain isn't decided yet, so this
- * defaults to a path on whatever domain the app is running on
- * (VERCEL_URL / NEXT_PUBLIC_SITE_URL). Once a real domain with wildcard
- * DNS is pointed at Vercel, set NEXT_PUBLIC_PREVIEW_DOMAIN to it and
- * middleware.ts will start serving `<slug>.yourdomain.com` as a true
- * subdomain — this function's output switches over automatically, no
- * code changes needed elsewhere.
+ * defaults to a path on whatever domain the app is running on. Once a real
+ * domain with wildcard DNS is pointed at Vercel, set
+ * NEXT_PUBLIC_PREVIEW_DOMAIN to it and middleware.ts will start serving
+ * `<slug>.yourdomain.com` as a true subdomain — this function's output
+ * switches over automatically, no code changes needed elsewhere.
  */
 export function buildPreviewLink(slug: string): string {
   const previewDomain = process.env.NEXT_PUBLIC_PREVIEW_DOMAIN;
@@ -40,11 +52,7 @@ export function buildPreviewLink(slug: string): string {
     return `https://${slug}.${previewDomain}`;
   }
 
-  const siteUrl =
-    process.env.NEXT_PUBLIC_SITE_URL ||
-    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
-
-  return `${siteUrl}/preview/${slug}`;
+  return `${buildSiteUrl()}/preview/${slug}`;
 }
 
 function slugify(text: string): string {

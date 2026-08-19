@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { addInquiry } from "@/lib/inquiries";
 import { createClient } from "@/lib/supabase/server";
-import { buildPreviewLink } from "@/lib/slug";
+import { buildPreviewLink, buildSiteUrl } from "@/lib/slug";
+import { emailConfigured, sendNewInquiryNotification } from "@/lib/email";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -66,10 +67,29 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // TODO: notify the team by email (e.g. a Resend send here too) so a new
-  // inquiry doesn't rely on someone checking /admin. The customer-facing
-  // "your preview is ready" email is sent later, from /admin, once a human
-  // has actually reviewed the auto-generated preview — see lib/email.ts.
+  // Notify the team the moment a new inquiry comes in, so it doesn't rely
+  // on someone remembering to check /admin. Best-effort: the inquiry is
+  // already saved above, so a broken notification email never loses the
+  // submission — it's just not surfaced until /admin is checked manually.
+  // (Distinct from the customer-facing "your preview is ready" email,
+  // which is sent later from /admin once a human has actually built it.)
+  if (emailConfigured()) {
+    try {
+      await sendNewInquiryNotification({
+        name,
+        email,
+        phone: body.phone ? String(body.phone).trim() : undefined,
+        projectName: body.projectName ? String(body.projectName).trim() : undefined,
+        projectType: String(body.projectType ?? "Not sure"),
+        budget: String(body.budget ?? "Not sure"),
+        timeline: String(body.timeline ?? "Not sure"),
+        description,
+        adminUrl: `${buildSiteUrl()}/admin`,
+      });
+    } catch (err) {
+      console.error("Failed to send new-inquiry notification:", err);
+    }
+  }
 
   return NextResponse.json(
     { ok: true, id: inquiry.id, previewUrl: buildPreviewLink(inquiry.slug) },
